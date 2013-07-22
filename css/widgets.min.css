@@ -1,0 +1,10 @@
+.dragHelp,.dropHelp,.dropTarget{display:none}
+form.supportsDragAndDropFileUpload{padding:30px;text-align:center;height:150px;color:#ccc;font-weight:bold;font-size:22px;line-height:28px;position:relative;border:4px dashed #ccc}
+form.supportsDragAndDropFileUpload input{display:none;}
+form.supportsDragAndDropFileUpload .dragHelp{display:block;position:relative;z-index:1}
+form.supportsDragAndDropFileUpload .dropTarget{display:block;position:absolute;left:0;top:0;width:100%;height:100%}
+form.supportsDragAndDropFileUpload.dragover{height:300px;border-color:#46a546}
+form.supportsDragAndDropFileUpload.dragover .dragHelp{display:none}
+form.supportsDragAndDropFileUpload.dragover .dropHelp{display:block;font-size:28px;line-height:34px}
+.UploadedFileWidget{margin-top:7px;margin-bottom:7px}
+.UploadedFileWidget .filename{font-size:16px;font-weight:bold;color:#666}

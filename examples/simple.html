@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple</title>
+    </head>
+
+    <body>
+        <form id="myform" action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="files">
+        </form>
+
+        <script src="../js/devilry_file_upload.js"></script>
+        <script>
+            new devilry_file_upload.FileUpload({
+                formElement: document.getElementById('myform'),
+                listeners: {
+                    change: function() {
+                        console.log('fieldChange');
+                    },
+                    uploadStart: function(fileUpload) {
+                        console.log('uploadStart', fileUpload);
+                    },
+                    uploadProgress: function(fileUpload, state) {
+                        console.log('progress', fileUpload, state);
+                    },
+                    uploadFinished: function(fileUpload, data) {
+                        //console.log('uploadFinished', fileUpload, data);
+                        console.log('uploadFinished', data);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple multifile</title>
+    </head>
+
+    <body>
+        <form id="myform" action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="files" multiple>
+        </form>
+
+        <script src="../js/devilry_file_upload.js"></script>
+        <script>
+            var uploader = new devilry_file_upload.FileUpload({
+                formElement: document.getElementById('myform'),
+                listeners: {
+                    uploadFinished: function(fileUpload, data) {
+                        console.log('uploadFinished', data);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

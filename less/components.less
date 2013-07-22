@@ -1,0 +1,34 @@
+.closeButtonDanger {
+    float: right;
+    border: false;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 16px;
+    color: rgba(0, 0, 0, .6);
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255,255,255,1);
+    &:hover {
+        color: rgba(162, 27, 27, .8);
+    }
+}
+
+button.closeButtonDanger {
+    background: transparent;
+    padding: 0;
+    border: 0;
+    -webkit-appearance: none;
+}
+
+.inlineProgress {
+    display: inline-block;
+    height: 16px;
+    width: 80px;
+    border: 1px solid #d9d9d9;
+    background-color: #fff;
+    vertical-align: middle;
+    .bar {
+        background-color: #46a546;
+        height: 100%;
+        width: 0;
+    }
+}

@@ -1,0 +1,142 @@
+.closeButtonDanger {
+  float: right;
+  border: false;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  text-shadow: 0 1px 0 #ffffff;
+}
+.closeButtonDanger:hover {
+  color: rgba(162, 27, 27, 0.8);
+}
+button.closeButtonDanger {
+  background: transparent;
+  padding: 0;
+  border: 0;
+  -webkit-appearance: none;
+}
+.inlineProgress {
+  display: inline-block;
+  height: 16px;
+  width: 80px;
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+  vertical-align: middle;
+}
+.inlineProgress .bar {
+  background-color: #46a546;
+  height: 100%;
+  width: 0;
+}
+.FileUploadWidget {
+  /* We do not show the drag and drop elements unless
+     * supportsDragAndDropFileUpload is set. */
+
+  /*
+     * - Hide the input field - we use a button/link with click() instead.
+     * - Style the form as a big box where users can drop their files.
+     * - Style the drop target as overlay covering the entire form. If we use the
+     *   form as a drop target, hovering the text will trigger dropleave.
+     */
+
+}
+.FileUploadWidget .dragHelp,
+.FileUploadWidget .dropHelp,
+.FileUploadWidget .dropTarget {
+  display: none;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload {
+  padding: 30px;
+  text-align: center;
+  height: 150px;
+  color: #ccc;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 28px;
+  position: relative;
+  /* To get the .dropTarget to position itself inside this box. */
+
+  border: 4px dashed #ccc;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload input[type=file] {
+  display: none;
+  /* Hide the file file field if we support drag and drop*/
+
+}
+.FileUploadWidget.supportsDragAndDropFileUpload .dragHelp {
+  display: block;
+  /* Show helper text if we support drag and drop */
+
+  position: relative;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload .dropTarget {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  /*background: rgba(100, 100, 100, .5);*/
+
+  width: 100%;
+  height: 100%;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover {
+  height: 300px;
+  border-color: #46a546;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover .dragHelp {
+  display: none;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover .dropHelp {
+  display: block;
+  font-size: 28px;
+  line-height: 34px;
+  z-index: 1;
+}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover .dropTarget {
+  z-index: 2;
+  background-color: #fff;
+  opacity: 0.1;
+}
+.UploadedFileWidget,
+.UploadedFilePreviewWidget,
+.FileUploadProgressWidget {
+  margin: 7px 0;
+  border: 1px solid #d9d9d9;
+  background-color: #efefef;
+  padding: 4px 30px 4px 7px;
+  position: relative;
+}
+.UploadedFileWidget .closeButtonDanger,
+.UploadedFilePreviewWidget .closeButtonDanger,
+.FileUploadProgressWidget .closeButtonDanger {
+  position: absolute;
+  top: 4px;
+  right: 7px;
+}
+.UploadedFileWidget .filename,
+.UploadedFilePreviewWidget .filename {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+}
+.UploadedFilePreviewWidget .preview {
+  display: none;
+}
+.UploadedFilePreviewWidget.hasPreview {
+  height: 100px;
+}
+.UploadedFilePreviewWidget.hasPreview .preview {
+  display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left;
+  width: 100px;
+  height: 100px;
+  float: left;
+  margin-right: 15px;
+  overflow: hidden;
+  font-style: italic;
+  font-size: 12px;
+}

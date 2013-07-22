@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Multifile drag and drop</title>
+
+        <link href="../css/widgets.css" rel="stylesheet">
+        <style type="text/css">
+            body {
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 14px;
+            }
+            .content {
+                margin: 30px auto 0 auto;
+                max-width: 600px;
+            }
+
+            #responses {
+                white-space: pre-wrap;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="content">
+            <form id="myform" action="/upload" method="post" enctype="multipart/form-data" class="FileUploadWidget">
+                <input id="fileUploadField" type="file" name="files" multiple>
+                <div class="dragHelp">
+                    Upload files by dragging and dropping them into this box, or
+                    by <a href="#" id="fileUploadLink">uploading them</a>.
+                </div>
+                <div class="dropHelp">
+                    Drop your files to upload them.
+                </div>
+                <div class="dropTarget" id="dropTarget"></div>
+            </form>
+            <div id="responses"><h2>Server responses:</h2></div>
+        </div>
+
+        <script src="../js/devilry_file_upload.js"></script>
+        <script>
+            var form = document.getElementById('myform');
+
+            var uploader = new devilry_file_upload.FileUpload({
+                formElement: form,
+
+                // Enable drag and drop
+                dropTargetElement: document.getElementById('dropTarget'),
+
+                // Event handlers
+                listeners: {
+                    uploadStart: function(fileUpload, asyncFileUploader) {
+                        asyncFileUploader.on('finished', function(asyncFileUploader, data) {
+                            //console.log('uploadFinished', data);
+                            responsesElement = document.getElementById('responses')
+                            responsesElement.innerHTML = responsesElement.innerHTML + data + '\n\n';
+                        });
+                    },
+                    dragenter: function() {
+                        // NOTE: You may want to use the addClass implementation from a library like jQuery here
+                        form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload dragover')
+                    },
+                    dragleave: function() {
+                        // NOTE: You may want to use the removeClass('dragover') implementation from a library like jQuery here
+                        form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload')
+                    },
+                    dropFiles: function() {
+                        // NOTE: You may want to use the removeClass('dragover') implementation from a library like jQuery here
+                        form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload')
+                    }
+                }
+            });
+            if(devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
+                form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload');
+                document.getElementById('fileUploadLink').addEventListener('click', function() {
+                    document.getElementById('fileUploadField').click();
+                }, false);
+            }
+        </script>
+    </body>
+</html>

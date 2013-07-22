@@ -1,0 +1,123 @@
+@import "mixins";
+@import "components";
+
+
+.FileUploadWidget {
+    /* We do not show the drag and drop elements unless
+     * supportsDragAndDropFileUpload is set. */
+    .dragHelp, .dropHelp, .dropTarget {
+        display: none;
+    }
+
+
+    /*
+     * - Hide the input field - we use a button/link with click() instead.
+     * - Style the form as a big box where users can drop their files.
+     * - Style the drop target as overlay covering the entire form. If we use the
+     *   form as a drop target, hovering the text will trigger dropleave.
+     */
+    &.supportsDragAndDropFileUpload {
+
+        padding: 30px;
+        text-align: center;
+        height: 150px;
+        color: #ccc;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 28px;
+        position: relative; /* To get the .dropTarget to position itself inside this box. */
+        border: 4px dashed #ccc;
+
+        input[type=file] {
+            display: none; /* Hide the file file field if we support drag and drop*/
+        }
+
+        .dragHelp {
+            display: block; /* Show helper text if we support drag and drop */
+            position: relative;
+        }
+
+        .dropTarget {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            /*background: rgba(100, 100, 100, .5);*/
+            width: 100%;
+            height: 100%;
+        }
+
+        &.dragover {
+            height: 300px;
+            border-color: #46a546;
+            .dragHelp {
+                display: none;
+            }
+            .dropHelp {
+                display: block;
+                font-size: 28px;
+                line-height: 34px;
+                z-index: 1;
+            }
+            .dropTarget {
+                z-index: 2;
+                // For IE10 to not trigger dragleave when hovering .dropHelp,
+                // we need a background. So we maek it white and more or less
+                // transparent.
+                background-color: #fff;
+                opacity: 0.1;
+            }
+        }
+    }
+}
+
+
+.UploadedFileWidget, .UploadedFilePreviewWidget, .FileUploadProgressWidget {
+    margin: 7px 0;
+    border: 1px solid #d9d9d9;
+    background-color: #efefef;
+    padding: 4px 30px 4px 7px;
+    position: relative;
+
+    .closeButtonDanger {
+        position: absolute;
+        top: 4px;
+        right: 7px;
+    }
+}
+
+.UploadedFileWidget, .UploadedFilePreviewWidget {
+    .filename {
+        font-size: 16px;
+        font-weight: bold;
+        color: #666;
+    }
+}
+
+.UploadedFilePreviewWidget {
+    .preview {
+        display: none;
+    }
+    &.hasPreview {
+        height: 100px;
+        .preview {
+            display: block;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: left;
+            width: 100px;
+            height: 100px;
+            float: left;
+            //border: 1px solid #d9d9d9;
+            //background-color: #fff;
+            margin-right: 15px;
+            overflow: hidden;
+            font-style: italic;
+            font-size: 12px;
+        }
+    }
+}
+
+
+.FileUploadProgressWidget {
+}

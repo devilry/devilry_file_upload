@@ -1,0 +1,10 @@
+{
+  "name": "devilry_file_upload",
+  "description": "Dependencies for the Cakefile",
+  "version": "1.0.0",
+  "dependencies": {
+    "coffee-script": "1.6.x",
+    "less": "1.4.x"
+  },
+  "engine": "node >= 0.8.14"
+}
