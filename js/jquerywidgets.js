@@ -42,11 +42,11 @@ Style guide
         deleteRequestArgs: null,
         deleteButtonSelector: '.deleteButton',
         deletingMessageSelector: '.deletingMessage'
-      }, ['filename', 'renderFunction']);
-      this.filename = options.filename, renderFunction = options.renderFunction, this.deleteRequestArgs = options.deleteRequestArgs, this.deleteButtonSelector = options.deleteButtonSelector, this.deletingMessageSelector = options.deletingMessageSelector;
+      }, ['renderFunction']);
+      renderFunction = options.renderFunction, this.deleteRequestArgs = options.deleteRequestArgs, this.deleteButtonSelector = options.deleteButtonSelector, this.deletingMessageSelector = options.deletingMessageSelector;
       renderedHtml = renderFunction.apply(this);
       this.elementJq = jQuery(renderedHtml);
-      if ((this.deleteRequestArgs != null) && (this.deleteButtonSelector != null)) {
+      if (this.deleteRequestArgs != null) {
         this.deleteButton = this.elementJq.find(this.deleteButtonSelector);
         if (this.deleteButton.length === 0) {
           throw "Could not find '" + this.deleteButtonSelector + "' in the rendered view: " + renderedHtml;
@@ -58,6 +58,12 @@ Style guide
         this.deleteButton.on('click', this._onDelete);
       }
     }
+
+    UploadedFileWidget.prototype.destroy = function() {
+      if (this.deleteRequestArgs != null) {
+        return this.deleteButton.off('click', this._onDelete);
+      }
+    };
 
     UploadedFileWidget.prototype.showDeletingMessage = function() {
       if (this.deletingMessage != null) {
@@ -130,7 +136,9 @@ Style guide
       previewFile = options.previewFile, previewUrl = options.previewUrl, previewText = options.previewText, previewSelector = options.previewSelector, hasPreviewCls = options.hasPreviewCls;
       this.previewJq = this.elementJq.find(previewSelector);
       if (previewUrl != null) {
-        this.setPreviewImage(previewUrl);
+        this.setPreviewUrl(previewUrl);
+      } else if (previewText != null) {
+        this.setPreviewText(previewText);
       } else if (previewFile != null) {
         fileWrapper = new devilry_file_upload.FileWrapper(previewFile);
         if (fileWrapper.isImage() || fileWrapper.isText()) {
@@ -147,7 +155,7 @@ Style guide
       }
     }
 
-    UploadedFilePreviewWidget.prototype.setPreviewImage = function(url) {
+    UploadedFilePreviewWidget.prototype.setPreviewUrl = function(url) {
       return this.previewJq.css({
         'background-image': "url(" + url + ")"
       });
@@ -158,7 +166,7 @@ Style guide
     };
 
     UploadedFilePreviewWidget.prototype.onLoadPreviewImage = function(event) {
-      return this.setPreviewImage(event.target.result);
+      return this.setPreviewUrl(event.target.result);
     };
 
     UploadedFilePreviewWidget.prototype.onLoadPreviewText = function(event) {

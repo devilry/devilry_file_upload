@@ -28,14 +28,14 @@ class UploadedFileWidget extends devilry_file_upload.Observable
             deleteRequestArgs: null
             deleteButtonSelector: '.deleteButton'
             deletingMessageSelector: '.deletingMessage'
-        }, ['filename', 'renderFunction'])
-        {@filename, renderFunction,
+        }, ['renderFunction'])
+        {renderFunction,
             @deleteRequestArgs,
             @deleteButtonSelector, @deletingMessageSelector} = options
 
         renderedHtml = renderFunction.apply(this)
         @elementJq = jQuery(renderedHtml)
-        if @deleteRequestArgs? and @deleteButtonSelector?
+        if @deleteRequestArgs?
             @deleteButton = @elementJq.find(@deleteButtonSelector)
             if @deleteButton.length == 0
                 throw "Could not find '#{@deleteButtonSelector}' in the rendered view: #{renderedHtml}"
@@ -43,6 +43,11 @@ class UploadedFileWidget extends devilry_file_upload.Observable
                 @deletingMessage = @elementJq.find(@deletingMessageSelector)
                 @deletingMessage.hide()
             @deleteButton.on('click', @_onDelete)
+
+    destroy: ->
+        if @deleteRequestArgs?
+            @deleteButton.off('click', @_onDelete)
+        
 
     showDeletingMessage: ->
         if @deletingMessage?
@@ -96,7 +101,9 @@ class UploadedFilePreviewWidget extends UploadedFileWidget
         @previewJq = @elementJq.find(previewSelector)
 
         if previewUrl?
-            @setPreviewImage(previewUrl)
+            @setPreviewUrl(previewUrl)
+        else if previewText?
+            @setPreviewText(previewText)
         else if previewFile?
             fileWrapper = new devilry_file_upload.FileWrapper(previewFile)
             if fileWrapper.isImage() or fileWrapper.isText()
@@ -109,7 +116,7 @@ class UploadedFilePreviewWidget extends UploadedFileWidget
                     reader.onload = @onLoadPreviewText
                     reader.readAsText(fileWrapper.file)
 
-    setPreviewImage: (url) ->
+    setPreviewUrl: (url) ->
         @previewJq.css({
             'background-image': "url(#{url})"
         })
@@ -118,7 +125,7 @@ class UploadedFilePreviewWidget extends UploadedFileWidget
         @previewJq.text(text)
 
     onLoadPreviewImage: (event) =>
-        @setPreviewImage(event.target.result)
+        @setPreviewUrl(event.target.result)
 
     onLoadPreviewText: (event) =>
         text = event.target.result

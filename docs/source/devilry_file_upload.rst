@@ -3,6 +3,7 @@ devilry_file_upload.js
 ======================
 
 .. default-domain:: js
+.. highlight:: js
 
 
 

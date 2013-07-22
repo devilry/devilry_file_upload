@@ -40,7 +40,6 @@ Instead, we provide hooks where YOU can handle your data flow. Example:
     We define a strict data flow for your file upload API, but we do not
     define the format of the response data at all. We have to restrict the
     file upload API to guarantee compatibility with old and new browsers.
-
     So, when a file is uploaded, you get a string that you have to decode
     yourself, and you decide what to do next (E.g.: Show a success message,
     send it ot the ``UploadedFilesWidget``, ...).
