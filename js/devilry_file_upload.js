@@ -466,7 +466,12 @@ browsers.
     };
 
     AsyncFileUploader.prototype.upload = function() {
-      this.fireEvent('start', this);
+      var abort;
+      abort = this.fireEvent('start', this);
+      if (abort) {
+        console.log('aborted');
+        return;
+      }
       if (browserInfo.supportsXhrFileUpload()) {
         return this.uploadXHR();
       } else {
@@ -493,6 +498,10 @@ browsers.
         filenames.push(filename);
       }
       return filenames;
+    };
+
+    AsyncFileUploader.prototype.hasMultipleFiles = function() {
+      return this.getFilenames().length > 1;
     };
 
     AsyncFileUploader.prototype.getFileInfo = function() {
@@ -605,9 +614,22 @@ browsers.
       return (_ref = this._getCurrentFileField()) != null ? _ref.htmlElement : void 0;
     };
 
+    FileUpload.prototype.pause = function() {
+      this.paused = true;
+      return this.fireEvent('pause', this);
+    };
+
+    FileUpload.prototype.resume = function() {
+      this.paused = false;
+      return this.fireEvent('resume', this);
+    };
+
     FileUpload.prototype.upload = function(files) {
       var helper, old,
         _this = this;
+      if (this.paused) {
+        throw "Can not upload while paused.";
+      }
       old = this.current;
       helper = new AsyncFileUploader({
         formElement: this.getCurrentFormElement(),
@@ -633,9 +655,14 @@ browsers.
     };
 
     FileUpload.prototype._onUploadStart = function() {
-      var args;
+      var abort, args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return this.fireEvent.apply(this, ['uploadStart', this].concat(__slice.call(args)));
+      abort = this.fireEvent.apply(this, ['uploadStart', this].concat(__slice.call(args)));
+      if (abort) {
+        return new ObservableResult({
+          abort: true
+        });
+      }
     };
 
     FileUpload.prototype._setupDragEvents = function() {

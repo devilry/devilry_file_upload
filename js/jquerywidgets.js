@@ -182,6 +182,8 @@ Style guide
   FileUploadWidget = (function() {
 
     function FileUploadWidget(options) {
+      this._onResume = __bind(this._onResume, this);
+      this._onPause = __bind(this._onPause, this);
       this._onClickFileUploadButton = __bind(this._onClickFileUploadButton, this);
       this._onDropFiles = __bind(this._onDropFiles, this);
       this._onDragLeave = __bind(this._onDragLeave, this);
@@ -200,6 +202,8 @@ Style guide
         this.containerJq.addClass(this.supportsDragAndDropFileUploadClass);
         this._attachFileUploadListener();
       }
+      this.fileUpload.on('pause', this._onPause);
+      this.fileUpload.on('resume', this._onResume);
       this.fileUpload.on('createWidget', this._onCreateWidget);
     }
 
@@ -207,8 +211,11 @@ Style guide
       if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
         this.fileUpload.off('dragenter', this._onDragEnter);
         this.fileUpload.off('dragleave', this._onDragLeave);
-        return this.fileUpload.off('dropFiles', this._onDropFiles);
+        this.fileUpload.off('dropFiles', this._onDropFiles);
       }
+      this.fileUpload.off('createWidget', this._onCreateWidget);
+      this.fileUpload.off('pause', this._onPause);
+      return this.fileUpload.off('resume', this._onResume);
     };
 
     FileUploadWidget.prototype._attachFileUploadListener = function() {
@@ -236,6 +243,14 @@ Style guide
     FileUploadWidget.prototype._onClickFileUploadButton = function(e) {
       e.preventDefault();
       return jQuery(this.fileUpload.getCurrentFileFieldElement()).click();
+    };
+
+    FileUploadWidget.prototype._onPause = function() {
+      return this.containerJq.hide();
+    };
+
+    FileUploadWidget.prototype._onResume = function() {
+      return this.containerJq.show();
     };
 
     return FileUploadWidget;

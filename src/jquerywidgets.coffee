@@ -148,6 +148,8 @@ class FileUploadWidget
             @fileUpload.on('dropFiles', @_onDropFiles)
             @containerJq.addClass(@supportsDragAndDropFileUploadClass)
             @_attachFileUploadListener()
+        @fileUpload.on('pause', @_onPause)
+        @fileUpload.on('resume', @_onResume)
         @fileUpload.on('createWidget', @_onCreateWidget)
 
     destroy: ->
@@ -155,6 +157,9 @@ class FileUploadWidget
             @fileUpload.off('dragenter', @_onDragEnter)
             @fileUpload.off('dragleave', @_onDragLeave)
             @fileUpload.off('dropFiles', @_onDropFiles)
+        @fileUpload.off('createWidget', @_onCreateWidget)
+        @fileUpload.off('pause', @_onPause)
+        @fileUpload.off('resume', @_onResume)
 
     _attachFileUploadListener: ->
         jQuery(@fileUpload.getCurrentWidgetElement()).find(@fileUploadButtonSelector).on('click', @_onClickFileUploadButton)
@@ -175,6 +180,12 @@ class FileUploadWidget
     _onClickFileUploadButton: (e) =>
         e.preventDefault()
         jQuery(@fileUpload.getCurrentFileFieldElement()).click()
+
+    _onPause: =>
+        @containerJq.hide()
+
+    _onResume: =>
+        @containerJq.show()
 
 
 

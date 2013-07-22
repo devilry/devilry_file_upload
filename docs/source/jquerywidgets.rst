@@ -124,6 +124,16 @@ The following properties of ``widgetRenderFunction`` is important:
       your page.
 
 
+Autohide on abort
+-----------------
+The widget hides itself (hides the
+:func:`devilry_file_upload.FileUpload.getContainerElement`) whenever the
+FileUpload fires the ``abort``-event. It shows itself again on the
+``resume``-event. This is useful in many cases, especially when implementing
+single file upload - you just have to pause the file upload when a file is
+added, and resume the upload if it is delete, or the upload fails.
+
+
 CSS classes
 -----------
 
@@ -379,15 +389,15 @@ UploadedFilePreviewWidget
             Set the preview as a text string. Typically used when your server
             API extract text from some text-based format, such as PDF or ODF.
 
-    .. function:: setPreviewUrl(url)
+.. function:: devilry_file_upload.jquery.UploadedFilePreviewWidget.setPreviewUrl(url)
 
-        The the preview image from an URL --- same effect as the ``previewUrl``
-        option.
+    set the the preview image from an URL --- same effect as the ``previewUrl``
+    option.
 
-    .. function:: setPreviewText(textstring)
+.. function:: devilry_file_upload.jquery.UploadedFilePreviewWidget.setPreviewText(textstring)
 
-        The the preview text from a string --- same effect as the
-        ``previewText`` option.
+    Set the the preview text from a string --- same effect as the
+    ``previewText`` option.
 
 
 Usage
