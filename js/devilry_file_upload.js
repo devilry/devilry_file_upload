@@ -566,7 +566,7 @@ browsers.
         dropTargetSelector: null,
         dropEffect: 'copy'
       }, ['containerElement', 'widgetRenderFunction']);
-      containerElement = options.containerElement, this.widgetRenderFunction = options.widgetRenderFunction, this.uploadOnChange = options.uploadOnChange, this.allowDragAndDrop = options.allowDragAndDrop, this.dropTargetSelector = options.dropTargetSelector, this.dropEffect = options.dropEffect;
+      containerElement = options.containerElement, this.widgetRenderFunction = options.widgetRenderFunction, this.uploadOnChange = options.uploadOnChange, this.dropTargetSelector = options.dropTargetSelector, this.dropEffect = options.dropEffect;
       this.container = new ElementWrapper(containerElement);
       this.draggingFiles = false;
       this._createWidget();

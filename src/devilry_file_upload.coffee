@@ -371,7 +371,7 @@ class FileUpload extends Observable
             dropEffect: 'copy'
         }, ['containerElement', 'widgetRenderFunction'])
         {containerElement, @widgetRenderFunction,
-            @uploadOnChange, @allowDragAndDrop,
+            @uploadOnChange,
             @dropTargetSelector, @dropEffect} = options
         @container = new ElementWrapper(containerElement)
         @draggingFiles = false

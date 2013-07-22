@@ -26,8 +26,6 @@
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="../js/jquerywidgets.js"></script>
         <script>
-            devilry_file_upload.prevent_default_window_drophandler();
-
             function handleFileUploadSuccess(fileUpload, asyncFileUploader, jsonData) {
                 var files = asyncFileUploader.getFileobjectsByName();
                 var i;
@@ -41,21 +39,14 @@
                             return [
                                 '<div class="UploadedFilePreviewWidget GrayFileBox">',
                                     '<div class="preview"></div>',
-                                    '<div class="filename">',
-                                        uploadedFile.filename,
-                                    '</div>',
+                                    '<div class="filename">', uploadedFile.filename, '</div>',
                                     '<button type="button" class="deleteButton closeButtonDanger">&times;</button>',
-                                    '<div class="deletingMessage">',
-                                        'Deleting...',
-                                    '</div>',
+                                    '<div class="deletingMessage">Deleting...</div>',
                                 '</div>'
                             ].join('');
                         },
 
-                        // This is forwarded to jQuery.ajax when deleting the file.
-                        // If deleteRequestArgs is null or undefined, the delete button is not shown.
-                        // Note that the widget sets ``succes``, error`` and ``complete``, so setting
-                        // them will have no effect.
+                        // Format the delete request for your delete API.. This works with the example server.
                         deleteRequestArgs: {
                             url: uploadedFile.delete_url,
                             processData: false,
@@ -64,6 +55,7 @@
                                 filename: uploadedFile.filename
                             })
                         },
+
                         listeners: {
                             deleteSuccess: function(widget, data, status) {
                                 // Resume the fileUpload. Causes the
@@ -83,15 +75,74 @@
             }
 
 
-            var fileUpload = new devilry_file_upload.FileUpload({
+            function handleUploadStart(fileUpload, asyncFileUploader) {
+                if(asyncFileUploader.hasMultipleFiles()) {
+                    alert('You can only upload a single file.');
+                    return new devilry_file_upload.ObservableResult({
+                        abort: true
+                    });
+                }
 
+                // Pause the fileUpload to prevent further uploads.
+                // - this also tells the FileUploadWidget to hide itself.
+                fileUpload.pause();
+
+                var uploadProgressWidget = new devilry_file_upload.jquery.FileUploadProgressWidget({
+                    fileUpload: fileUpload,
+                    asyncFileUploader: asyncFileUploader,
+                    renderFunction: function(asyncFileUploader) {
+                        // NOTE: You would typically use a template engine, like Mustache, here.
+                        return [
+                            '<div class="FileUploadProgressWidget GrayFileBox large">',
+                                '<div class="inlineProgress"><div class="bar"></div></div>',
+                                ' Uploading ', this.asyncFileUploader.getFilenames().join(', '),
+                                '<button type="button" class="abortButton closeButtonDanger">&times;</button>',
+                            '</div>'
+                        ].join('');
+                    }
+                });
+                $('#fileUploadProgressContainer').append(uploadProgressWidget.elementJq);
+
+                asyncFileUploader.on('finished', function(asyncFileUploader, data) {
+                    // In uploadFinished, we parse the response from the
+                    // server, and add the uploaded files to the
+                    // uploadedFilesWidget.
+                    jsonData = jQuery.parseJSON(data);
+                    if(jsonData.success) {
+                        handleFileUploadSuccess(fileUpload, asyncFileUploader, jsonData);
+                    } else {
+                        fileUpload.resume();
+                        alert("Error: " + jsonData.error);
+                    }
+                });
+
+                asyncFileUploader.on('abort', function(asyncFileUploader) {
+                    alert('Upload was aborted. This example does not handle partial uploads, so you will probably have a partially uploaded file in your examples/ folder.');
+                    fileUpload.resume();
+                });
+                asyncFileUploader.on('error', function(asyncFileUploader, e) {
+                    alert('The upload failed.');
+                    fileUpload.resume();
+                    uploadProgressWidget.destroy();
+                });
+            }
+
+
+
+            // 
+            // Setup our file upload UI
+            //
+
+            devilry_file_upload.prevent_default_window_drophandler();
+            var fileUpload = new devilry_file_upload.FileUpload({
                 // The FileUpload API is plain JS (no jQuery), so we have to
                 // send in the html elements, not the jQuery objects.
-                //formElement: $('#myform').get(0),
-                //dropTargetElement: $('#myform .dropTarget').get(0),
-                dropTargetSelector: '.dropTarget',
                 containerElement: $('#fileUpload').get(0),
 
+                dropTargetSelector: '.dropTarget',
+                listeners: {
+                    uploadStart: handleUploadStart
+                },
                 widgetRenderFunction: function() {
                     return [
                         '<form action="/upload" method="post" enctype="multipart/form-data">',
@@ -105,71 +156,6 @@
                         '<div class="dropTarget"></div>'
                     ].join('');
                 },
-
-                // Enable drag and drop
-                allowDragAndDrop: true,
-
-                // Event handlers
-                listeners: {
-
-                    // When an upload start, we get a
-                    // ``devilry_file_upload.AsyncFileUploader`` where we can
-                    // listen for the ``progress`` and ``finished`` events.
-                    uploadStart: function(fileUpload, asyncFileUploader) {
-                        if(asyncFileUploader.hasMultipleFiles()) {
-                            alert('You can only upload a single file.');
-                            return new devilry_file_upload.ObservableResult({
-                                abort: true
-                            });
-                        }
-
-                        // Pause the fileUpload to prevent further uploads.
-                        // - this also tells the FileUploadWidget to hide itself.
-                        fileUpload.pause();
-
-                        var uploadProgressWidget = new devilry_file_upload.jquery.FileUploadProgressWidget({
-                            fileUpload: fileUpload,
-                            asyncFileUploader: asyncFileUploader,
-                            renderFunction: function(asyncFileUploader) {
-                                // NOTE: You would typically use a template engine, like Mustache, here.
-                                return [
-                                    '<div class="FileUploadProgressWidget GrayFileBox large">',
-                                        '<div class="inlineProgress">',
-                                            '<div class="bar"></div>',
-                                        '</div>',
-                                        ' Uploading ',
-                                        this.asyncFileUploader.getFilenames().join(', '),
-                                        '<button type="button" class="abortButton closeButtonDanger">&times;</button>',
-                                    '</div>'
-                                ].join('');
-                            }
-                        });
-                        $('#fileUploadProgressContainer').append(uploadProgressWidget.elementJq);
-
-                        asyncFileUploader.on('finished', function(asyncFileUploader, data) {
-                            // In uploadFinished, we parse the response from the
-                            // server, and add the uploaded files to the
-                            // uploadedFilesWidget.
-                            jsonData = jQuery.parseJSON(data);
-                            if(jsonData.success) {
-                                handleFileUploadSuccess(fileUpload, asyncFileUploader, jsonData);
-                            } else {
-                                fileUpload.resume();
-                                alert("Error: " + jsonData.error);
-                            }
-                        });
-
-                        asyncFileUploader.on('abort', function(asyncFileUploader) {
-                            alert('Upload was aborted. This example does not handle partial uploads, so you will probably have a partially uploaded file in your examples/ folder.');
-                            fileUpload.resume();
-                        });
-                        asyncFileUploader.on('error', function(asyncFileUploader, e) {
-                            alert('The upload failed.');
-                            fileUpload.resume();
-                            uploadProgressWidget.destroy();
-                        });
-                    }
-                }
             });
             var fileUploadWidget = new devilry_file_upload.jquery.FileUploadWidget({
                 fileUpload: fileUpload
