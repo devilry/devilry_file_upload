@@ -10,7 +10,8 @@ See the LICENSE file for details.
 
 State
 =====
-The project is under development, and should not be used yet.
+The project is in beta. We are currently trying it out on a complex
+audio/video/text sharing site.
 
 
 Docs
