@@ -47,6 +47,10 @@ button.closeButtonDanger {
 .FileUploadWidget .dropTarget {
   display: none;
 }
+.FileUploadWidget form {
+  margin: 0;
+  padding: 0;
+}
 .FileUploadWidget.supportsDragAndDropFileUpload {
   position: relative;
   -webkit-box-sizing: border-box;
