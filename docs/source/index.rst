@@ -8,6 +8,7 @@ Overview
    intro
    examples
    devilry_file_upload
+   jquerywidgets
    develop
    license
 
