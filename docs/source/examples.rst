@@ -23,6 +23,15 @@ start with :doc:`examples/simple`.
       default security settings.
 
 
+A note about simplicity
+#######################
+Some of the examples may seem very verbose compared to other file upload
+solutions. We believe that simplicity does not come from writing as little code
+as possible --- it comes from deterministic behavior and as little magical
+behavior as possible. Our API is not designed to be a copy paste file uploader,
+it is designed to make it easy for you to make your own.
+
+
 Detailed guides for each example
 ################################
 
