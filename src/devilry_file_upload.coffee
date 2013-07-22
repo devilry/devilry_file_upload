@@ -311,7 +311,10 @@ class AsyncFileUploader extends Observable
         @form.htmlElement.submit()
 
     upload: ->
-        @fireEvent('start', @)
+        abort = @fireEvent('start', @)
+        if abort
+            console.log 'aborted'
+            return
         if browserInfo.supportsXhrFileUpload()
             @uploadXHR()
         else
@@ -330,6 +333,9 @@ class AsyncFileUploader extends Observable
             filename = filepath.split('/').pop().split('\\').pop()
             filenames.push(filename)
         return filenames
+
+    hasMultipleFiles: ->
+        return @getFilenames().length > 1
 
     getFileInfo: ->
         fileinfo = []
@@ -402,7 +408,17 @@ class FileUpload extends Observable
     getCurrentFileFieldElement: ->
         return @_getCurrentFileField()?.htmlElement
 
+    pause: ->
+        @paused = true
+        @fireEvent('pause', @)
+
+    resume: ->
+        @paused = false
+        @fireEvent('resume', @)
+
     upload: (files) ->
+        if @paused
+            throw "Can not upload while paused."
         old = @current
         helper = new AsyncFileUploader({
             formElement: @getCurrentFormElement()
@@ -424,7 +440,11 @@ class FileUpload extends Observable
         @fireEvent('fieldChange', @)
 
     _onUploadStart: (args...) =>
-        @fireEvent('uploadStart', @, args...)
+        abort = @fireEvent('uploadStart', @, args...)
+        if abort
+            return new ObservableResult({
+                abort: true
+            })
 
     _setupDragEvents: ->
         @dropTargetElement.on('dragover', @_onDragOver)
