@@ -1,6 +1,8 @@
 @import "mixins";
 @import "components";
 
+@green: #46a546;
+
 
 .FileUploadWidget {
     /* We do not show the drag and drop elements unless
@@ -17,7 +19,51 @@
      *   form as a drop target, hovering the text will trigger dropleave.
      */
     &.supportsDragAndDropFileUpload {
+        position: relative; // To get the .dropTarget to position itself inside this box.
+        .box-sizing(border-box);
 
+        form {
+            display: none; // Hide the form if we support drag and drop
+        }
+
+        .dragHelp {
+            display: block; // Show helper text if we support drag and drop
+            position: relative; // Required for z-index
+            z-index: 3;
+        }
+
+        .dropTarget {
+            display: block;
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .dropHelp {
+            position: relative; // Required for z-index
+            z-index: 1;
+        }
+
+        &.dragover {
+            .dragHelp {
+                display: none;
+            }
+            .dropHelp {
+                display: block;
+            }
+            .dropTarget {
+                // For IE10 to not trigger dragleave when hovering .dropHelp,
+                // we need a background. So we make it white and more or less
+                // transparent.
+                background-color: #fff;
+                opacity: 0.01;
+            }
+        }
+    }
+
+    &.FileUploadWidgetLargeStriped {
         padding: 30px;
         text-align: center;
         height: 150px;
@@ -25,72 +71,79 @@
         font-weight: bold;
         font-size: 22px;
         line-height: 28px;
-        position: relative; /* To get the .dropTarget to position itself inside this box. */
         border: 4px dashed #ccc;
-
-        input[type=file] {
-            display: none; /* Hide the file file field if we support drag and drop*/
-        }
-
-        .dragHelp {
-            display: block; /* Show helper text if we support drag and drop */
-            position: relative;
-        }
-
-        .dropTarget {
-            display: block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            /*background: rgba(100, 100, 100, .5);*/
-            width: 100%;
-            height: 100%;
-        }
 
         &.dragover {
             height: 300px;
-            border-color: #46a546;
-            .dragHelp {
-                display: none;
-            }
+            border-color: @green;
             .dropHelp {
-                display: block;
                 font-size: 28px;
                 line-height: 34px;
-                z-index: 1;
             }
-            .dropTarget {
-                z-index: 2;
-                // For IE10 to not trigger dragleave when hovering .dropHelp,
-                // we need a background. So we maek it white and more or less
-                // transparent.
-                background-color: #fff;
-                opacity: 0.1;
-            }
+        }
+    }
+
+    &.FileUploadWidgetSlimLine {
+        padding: 6px 4px;
+        text-align: center;
+        color: #b0b0b0;
+        font-size: 14px;
+        line-height: 16px;
+        border: 1px solid #ccc;
+
+        &.dragover {
+            border-color: @green;
+        }
+    }
+
+    &.FileUploadWidgetSlimLineExpand {
+        padding: 6px 4px;
+        text-align: center;
+        color: #b0b0b0;
+        font-size: 14px;
+        line-height: 16px;
+        border: 1px solid #ccc;
+
+        &.dragover {
+            padding: 18px 12px;
+            border-color: @green;
+            border-width: 3px;
+            font-size: 18px;
+            line-height: 20px;
         }
     }
 }
 
 
 .UploadedFileWidget, .UploadedFilePreviewWidget, .FileUploadProgressWidget {
-    margin: 7px 0;
-    border: 1px solid #d9d9d9;
-    background-color: #efefef;
-    padding: 4px 30px 4px 7px;
     position: relative;
-
     .closeButtonDanger {
         position: absolute;
         top: 4px;
         right: 7px;
     }
+
+    &.GrayFileBox {
+        margin: 7px 0;
+        border: 1px solid #d9d9d9;
+        background-color: #efefef;
+        padding: 4px 30px 4px 7px;
+    }
 }
 
 .UploadedFileWidget, .UploadedFilePreviewWidget {
-    .filename {
-        font-size: 16px;
-        font-weight: bold;
-        color: #666;
+    &.GrayFileBox {
+        .filename {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        &.large {
+            .filename {
+                font-size: 18px;
+                line-height: 20px;
+            }
+        }
     }
 }
 
@@ -99,25 +152,45 @@
         display: none;
     }
     &.hasPreview {
-        height: 100px;
+        position: relative;
         .preview {
             display: block;
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: left;
-            width: 100px;
-            height: 100px;
-            float: left;
-            //border: 1px solid #d9d9d9;
-            //background-color: #fff;
-            margin-right: 15px;
+            background-position: center;
+            //float: left;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
             overflow: hidden;
-            font-style: italic;
-            font-size: 12px;
+            .box-sizing(border-box);
+        }
+        &.GrayFileBox {
+            .filename {
+                line-height: 40px;
+                padding-left: 50px;
+            }
+            .preview {
+                width: 40px;
+                font-size: 10px;
+                line-height: 11px;
+                font-style: italic;
+                color: #666;
+                padding: 3px;
+            }
+            &.large {
+                .filename {
+                    line-height: 100px;
+                    padding-left: 115px;
+                }
+                .preview {
+                    width: 100px;
+                    font-size: 12px;
+                    line-height: 14px;
+                    font-style: italic;
+                }
+            }
         }
     }
-}
-
-
-.FileUploadProgressWidget {
 }

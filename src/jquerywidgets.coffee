@@ -125,15 +125,14 @@ class UploadedFilePreviewWidget extends UploadedFileWidget
         @setPreviewText(text)
 
 
-class FileUploadWidget extends devilry_file_upload.Observable
+class FileUploadWidget
     constructor: (options) ->
-        super(options)
         options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
-            draggingClasses: 'dragover'
+            draggingClass: 'dragover'
             supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload'
             fileUploadButtonSelector: '.fileUploadButton'
         }, ['fileUpload'])
-        {@fileUpload, @draggingClasses, @supportsDragAndDropFileUploadClass,
+        {@fileUpload, @draggingClass, @supportsDragAndDropFileUploadClass,
             @fileUploadButtonSelector} = options
         @containerJq = jQuery(@fileUpload.getContainerElement())
         if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
@@ -158,13 +157,13 @@ class FileUploadWidget extends devilry_file_upload.Observable
             @_attachFileUploadListener()
 
     _onDragEnter: =>
-        @containerJq.addClass(@draggingClasses)
+        @containerJq.addClass(@draggingClass)
 
     _onDragLeave: =>
-        @containerJq.removeClass(@draggingClasses)
+        @containerJq.removeClass(@draggingClass)
 
     _onDropFiles: =>
-        @containerJq.removeClass(@draggingClasses)
+        @containerJq.removeClass(@draggingClass)
 
     _onClickFileUploadButton: (e) =>
         e.preventDefault()
@@ -172,9 +171,8 @@ class FileUploadWidget extends devilry_file_upload.Observable
 
 
 
-class FileUploadProgressWidget extends devilry_file_upload.Observable
+class FileUploadProgressWidget
     constructor: (options) ->
-        super(options)
         options = devilry_file_upload.applyOptions('FileUploadProgressWidget', options, {
             progressSelector: '.inlineProgress'
             progressBarSelector: '.bar'
@@ -214,9 +212,8 @@ class FileUploadProgressWidget extends devilry_file_upload.Observable
 
 
 
-class FileUploadProgressContainerWidget extends devilry_file_upload.Observable
+class FileUploadProgressContainerWidget
     constructor: (options) ->
-        super(options)
         options = devilry_file_upload.applyOptions('FileUploadProgressContainerWidget', options, {
             progressSelector: undefined
             progressBarSelector: undefined

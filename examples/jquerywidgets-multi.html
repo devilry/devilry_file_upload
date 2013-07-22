@@ -17,7 +17,9 @@
         <div class="content">
             <div id="uploadedFiles"></div>
             <div id="fileUploadProgressContainer"></div>
-            <div id="fileUpload" class="FileUploadWidget FileUploadWidgetLargeStripes"></div>
+            <!--<div id="fileUpload" class="FileUploadWidget FileUploadWidgetLargeStriped"></div>-->
+            <!--<div id="fileUpload" class="FileUploadWidget FileUploadWidgetSlimLine"></div>-->
+            <div id="fileUpload" class="FileUploadWidget FileUploadWidgetSlimLineExpand"></div>
         </div>
 
         <script src="../js/devilry_file_upload.js"></script>
@@ -39,7 +41,7 @@
                         renderFunction: function() {
                             // NOTE: You would typically use a template engine, like Mustache, here.
                             return [
-                                '<div class="UploadedFilePreviewWidget">',
+                                '<div class="UploadedFilePreviewWidget GrayFileBox">',
                                     '<div class="preview"></div>',
                                     '<div>',
                                         '<div class="filename">',
@@ -104,13 +106,13 @@
                     return [
                         '<form action="/upload" method="post" enctype="multipart/form-data">',
                             '<input type="file" name="files" multiple>',
-                            '<div class="dragHelp">',
-                                'Add files by dragging and dropping them into this box, or ',
-                                'by <a href="#" class="fileUploadButton">uploading them</a>.',
-                            '</div>',
-                            '<div class="dropHelp">Drop your files to upload them.</div>',
-                            '<div class="dropTarget"></div>',
-                        '</form>'
+                        '</form>',
+                        '<div class="dragHelp">',
+                            'Add files by dragging and dropping them into this box, or ',
+                            'by <a href="#" class="fileUploadButton">uploading them</a>.',
+                        '</div>',
+                        '<div class="dropHelp">Drop your files to upload them.</div>',
+                        '<div class="dropTarget"></div>'
                     ].join('');
                 },
 
@@ -156,7 +158,7 @@
                 renderFunction: function(asyncFileUploader) {
                     // NOTE: You would typically use a template engine, like Mustache, here.
                     return [
-                        '<div class="FileUploadProgressWidget">',
+                        '<div class="FileUploadProgressWidget GrayFileBox large">',
                             '<div class="inlineProgress">',
                                 '<div class="bar"></div>',
                             '</div>',

@@ -171,22 +171,19 @@ Style guide
 
   })(UploadedFileWidget);
 
-  FileUploadWidget = (function(_super) {
-
-    __extends(FileUploadWidget, _super);
+  FileUploadWidget = (function() {
 
     function FileUploadWidget(options) {
       this._onClickFileUploadButton = __bind(this._onClickFileUploadButton, this);
       this._onDropFiles = __bind(this._onDropFiles, this);
       this._onDragLeave = __bind(this._onDragLeave, this);
       this._onDragEnter = __bind(this._onDragEnter, this);
-      this._onCreateWidget = __bind(this._onCreateWidget, this);      FileUploadWidget.__super__.constructor.call(this, options);
-      options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
-        draggingClasses: 'dragover',
+      this._onCreateWidget = __bind(this._onCreateWidget, this);      options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
+        draggingClass: 'dragover',
         supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload',
         fileUploadButtonSelector: '.fileUploadButton'
       }, ['fileUpload']);
-      this.fileUpload = options.fileUpload, this.draggingClasses = options.draggingClasses, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
+      this.fileUpload = options.fileUpload, this.draggingClass = options.draggingClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
       this.containerJq = jQuery(this.fileUpload.getContainerElement());
       if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
         this.fileUpload.on('dragenter', this._onDragEnter);
@@ -217,15 +214,15 @@ Style guide
     };
 
     FileUploadWidget.prototype._onDragEnter = function() {
-      return this.containerJq.addClass(this.draggingClasses);
+      return this.containerJq.addClass(this.draggingClass);
     };
 
     FileUploadWidget.prototype._onDragLeave = function() {
-      return this.containerJq.removeClass(this.draggingClasses);
+      return this.containerJq.removeClass(this.draggingClass);
     };
 
     FileUploadWidget.prototype._onDropFiles = function() {
-      return this.containerJq.removeClass(this.draggingClasses);
+      return this.containerJq.removeClass(this.draggingClass);
     };
 
     FileUploadWidget.prototype._onClickFileUploadButton = function(e) {
@@ -235,18 +232,15 @@ Style guide
 
     return FileUploadWidget;
 
-  })(devilry_file_upload.Observable);
+  })();
 
-  FileUploadProgressWidget = (function(_super) {
-
-    __extends(FileUploadProgressWidget, _super);
+  FileUploadProgressWidget = (function() {
 
     function FileUploadProgressWidget(options) {
       this._onFinished = __bind(this._onFinished, this);
       this._onProgress = __bind(this._onProgress, this);
       this._onAbort = __bind(this._onAbort, this);
       var abortButtonSelector, progressBarSelector, progressSelector, renderFunction, renderedHtml;
-      FileUploadProgressWidget.__super__.constructor.call(this, options);
       options = devilry_file_upload.applyOptions('FileUploadProgressWidget', options, {
         progressSelector: '.inlineProgress',
         progressBarSelector: '.bar',
@@ -289,15 +283,12 @@ Style guide
 
     return FileUploadProgressWidget;
 
-  })(devilry_file_upload.Observable);
+  })();
 
-  FileUploadProgressContainerWidget = (function(_super) {
-
-    __extends(FileUploadProgressContainerWidget, _super);
+  FileUploadProgressContainerWidget = (function() {
 
     function FileUploadProgressContainerWidget(options) {
-      this._onUploadStart = __bind(this._onUploadStart, this);      FileUploadProgressContainerWidget.__super__.constructor.call(this, options);
-      options = devilry_file_upload.applyOptions('FileUploadProgressContainerWidget', options, {
+      this._onUploadStart = __bind(this._onUploadStart, this);      options = devilry_file_upload.applyOptions('FileUploadProgressContainerWidget', options, {
         progressSelector: void 0,
         progressBarSelector: void 0,
         abortButtonSelector: void 0
@@ -324,7 +315,7 @@ Style guide
 
     return FileUploadProgressContainerWidget;
 
-  })(devilry_file_upload.Observable);
+  })();
 
   window.devilry_file_upload.jquery = {
     UploadedFileWidget: UploadedFileWidget,
