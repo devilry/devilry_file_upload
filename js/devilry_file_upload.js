@@ -388,6 +388,10 @@ browsers.
     __extends(AsyncFileUploader, _super);
 
     function AsyncFileUploader(options) {
+      this._onXHRLoad = __bind(this._onXHRLoad, this);
+      this._onXHRAbort = __bind(this._onXHRAbort, this);
+      this._onXHRError = __bind(this._onXHRError, this);
+      this._onXHRProgress = __bind(this._onXHRProgress, this);
       var formElement;
       AsyncFileUploader.__super__.constructor.call(this, options);
       options = applyOptions('AsyncFileUploader', options, {
@@ -397,6 +401,26 @@ browsers.
       this.form = new ElementWrapper(formElement);
     }
 
+    AsyncFileUploader.prototype._onXHRProgress = function(e) {
+      var currentState;
+      if (e.lengthComputable) {
+        currentState = (e.loaded / e.total) * 100;
+        return this.fireEvent('progress', this, currentState, e);
+      }
+    };
+
+    AsyncFileUploader.prototype._onXHRError = function(e) {
+      return this.fireEvent('error', this, e);
+    };
+
+    AsyncFileUploader.prototype._onXHRAbort = function(e) {
+      return this.fireEvent('abort', this, e);
+    };
+
+    AsyncFileUploader.prototype._onXHRLoad = function(e) {
+      return this._onUploaded(e.target.responseText);
+    };
+
     /*
     Upload the files using XMLHttpRequest. Unless you want to exclude older
     browsers, you will probably want to use the upload function.
@@ -404,8 +428,7 @@ browsers.
 
 
     AsyncFileUploader.prototype.uploadXHR = function() {
-      var file, formData, url, _i, _len, _ref,
-        _this = this;
+      var file, formData, url, _i, _len, _ref;
       formData = new FormData();
       _ref = this.files;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -413,16 +436,10 @@ browsers.
         formData.append(this.formFieldName, file);
       }
       this.xhrRequest = new XMLHttpRequest();
-      this.xhrRequest.addEventListener('load', function(event) {
-        return _this._onUploaded(event.target.responseText);
-      }, false);
-      this.xhrRequest.upload.addEventListener('progress', function(event) {
-        var currentState;
-        if (event.lengthComputable) {
-          currentState = (event.loaded / event.total) * 100;
-          return _this.fireEvent('progress', _this, currentState);
-        }
-      }, false);
+      this.xhrRequest.upload.addEventListener('progress', this._onXHRProgress, false);
+      this.xhrRequest.addEventListener('error', this._onXHRError, false);
+      this.xhrRequest.addEventListener('abort', this._onXHRAbort, false);
+      this.xhrRequest.addEventListener('load', this._onXHRLoad, false);
       url = this.form.getAttribute('action');
       this.xhrRequest.open("POST", url);
       return this.xhrRequest.send(formData);
@@ -430,8 +447,7 @@ browsers.
 
     AsyncFileUploader.prototype.abort = function() {
       if (this.xhrRequest != null) {
-        this.xhrRequest.abort();
-        return this.fireEvent('aborted', this);
+        return this.xhrRequest.abort();
       }
     };
 

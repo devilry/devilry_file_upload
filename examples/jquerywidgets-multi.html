@@ -145,12 +145,12 @@
                             }
                         });
 
-                        asyncFileUploader.on('aborted', function(asyncFileUploader) {
-                            // Aborted - we do not handle this, but you may
-                            // want to consider looping over
-                            // asyncFileUploader.getFileInfo() and try to delete
-                            // any files that may have been uploaded
+                        asyncFileUploader.on('abort', function(asyncFileUploader) {
                             alert('Upload was aborted. This example does not handle partial uploads, so you will probably have a partially uploaded file in your examples/ folder.');
+                        });
+                        asyncFileUploader.on('error', function(asyncFileUploader, e) {
+                            alert('The upload failed.');
+                            uploadProgressWidget.destroy();
                         });
                     }
                 }

@@ -271,15 +271,19 @@ Style guide
       }
     }
 
-    FileUploadProgressWidget.prototype._destroy = function() {
+    FileUploadProgressWidget.prototype._destroy_common = function() {
       this.asyncFileUploader.off('progress', this._onProgress);
       return this.elementJq.remove();
     };
 
+    FileUploadProgressWidget.prototype.destroy = function() {
+      this._destroy_common();
+      return this.asyncFileUploader.off('finished', this._onFinished);
+    };
+
     FileUploadProgressWidget.prototype._onAbort = function() {
       this.asyncFileUploader.abort();
-      this.asyncFileUploader.off('finished', this._onFinished);
-      return this._destroy();
+      return this.destroy();
     };
 
     FileUploadProgressWidget.prototype._onProgress = function(asyncFileUploader, state) {
@@ -288,7 +292,7 @@ Style guide
     };
 
     FileUploadProgressWidget.prototype._onFinished = function(asyncFileUploader, state) {
-      this._destroy();
+      this._destroy_common();
       return new devilry_file_upload.ObservableResult({
         remove: true
       });

@@ -263,6 +263,22 @@ class AsyncFileUploader extends Observable
         {formElement, @formFieldName, @files} = options
         @form = new ElementWrapper(formElement)
 
+
+
+    _onXHRProgress: (e) =>
+        if (e.lengthComputable)
+            currentState = (e.loaded / e.total) * 100
+            @fireEvent('progress', @, currentState, e)
+
+    _onXHRError: (e) =>
+        @fireEvent('error', @, e)
+
+    _onXHRAbort: (e) =>
+        @fireEvent('abort', @, e)
+
+    _onXHRLoad: (e) =>
+        @_onUploaded(e.target.responseText)
+
     ###
     Upload the files using XMLHttpRequest. Unless you want to exclude older
     browsers, you will probably want to use the upload function.
@@ -272,14 +288,10 @@ class AsyncFileUploader extends Observable
         for file in @files
             formData.append(@formFieldName, file)
         @xhrRequest = new XMLHttpRequest()
-        @xhrRequest.addEventListener('load', (event) =>
-            @_onUploaded(event.target.responseText)
-        , false)
-        @xhrRequest.upload.addEventListener('progress', (event) =>
-            if (event.lengthComputable)
-                currentState = (event.loaded / event.total) * 100
-                @fireEvent('progress', @, currentState)
-        , false)
+        @xhrRequest.upload.addEventListener('progress', @_onXHRProgress, false)
+        @xhrRequest.addEventListener('error', @_onXHRError, false)
+        @xhrRequest.addEventListener('abort', @_onXHRAbort, false)
+        @xhrRequest.addEventListener('load', @_onXHRLoad, false)
         url = @form.getAttribute('action')
         @xhrRequest.open("POST", url)
         @xhrRequest.send(formData)
@@ -287,7 +299,6 @@ class AsyncFileUploader extends Observable
     abort: ->
         if @xhrRequest?
             @xhrRequest.abort()
-            @fireEvent('aborted', @)
 
     uploadHiddenIframeForm: ->
         hiddenIframe = new HiddenIframe({

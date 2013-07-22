@@ -202,21 +202,24 @@ class FileUploadProgressWidget
             @abortButtonJq.on('click', @_onAbort)
             @abortButtonJq.show()
 
-    _destroy: ->
+    _destroy_common: ->
         @asyncFileUploader.off('progress', @_onProgress)
         @elementJq.remove()
 
+    destroy: ->
+        @_destroy_common()
+        @asyncFileUploader.off('finished', @_onFinished)
+
     _onAbort: =>
         @asyncFileUploader.abort()
-        @asyncFileUploader.off('finished', @_onFinished)
-        @_destroy()
+        @destroy()
 
     _onProgress: (asyncFileUploader, state) =>
         @progressJq.show()
         @progressBarJq.width("#{state}%")
 
     _onFinished: (asyncFileUploader, state) =>
-        @_destroy()
+        @_destroy_common()
         return new devilry_file_upload.ObservableResult({
             # We can not use @asyncFileUploader.off because we can not remove
             # _this_ function from the event loop while the loop is running
