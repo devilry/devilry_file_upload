@@ -9,7 +9,8 @@ To run the examples, you have to check out the `GIT repo
     $ python examples/server.py
 
 Then open your browser at http://localhost:8000/examples/. The source code for
-the examples are in ``examples/``. Each example is explained below. You should
+the examples are in ``examples/``. The upload API used by the examples puts
+files in ``examples/uploads/``. Each example is explained below. You should
 start with :doc:`examples/simple`.
 
 .. note::
