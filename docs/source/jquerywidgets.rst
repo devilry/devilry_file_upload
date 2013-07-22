@@ -153,6 +153,9 @@ You set these classes on the ``containerElement`` for the ``FileUpload``.
     Almost the same as FileUploadWidgetSlimLine, but the box expands when you
     drag files into it, providing the user with a clearer visual indicator.
 
+``.FileUploadWidget.PictureFrame``
+    Style as a picture frame.
+
     
 
 .. warning::
@@ -264,11 +267,14 @@ CSS
 ``.FileUploadProgressWidget``
     Basic layout of the widget.
 
-``.FileUploadProgressWidget GrayRow``
+``.FileUploadProgressWidget.GrayRow``
     Style the progress widget as a light gray box with darker gray border.
     
-``.FileUploadProgressWidget GrayRow large``
+``.FileUploadProgressWidget.GrayRow.large``
     Make the box and fonts larger.
+
+``.FileUploadProgressWidget.PictureFrame``
+    Style as a picture frame.
 
 
 
@@ -354,11 +360,14 @@ CSS
 ``.UploadedFileWidget``
     Basic layout of the widget.
 
-``.UploadedFileWidget GrayRow``
+``.UploadedFileWidget.GrayRow``
     Style the widget as a light gray box with darker gray border.
     
-``.UploadedFileWidget GrayRow large``
+``.UploadedFileWidget.GrayRow.large``
     Make the box and fonts larger.
+
+``.UploadedFileWidget.PictureFrame``
+    Style as a picture frame.
 
 
 UploadedFilePreviewWidget
@@ -420,8 +429,11 @@ CSS
 ``.UploadedFilePreviewWidget``
     Basic layout of the widget.
 
-``.UploadedFilePreviewWidget GrayRow``
+``.UploadedFilePreviewWidget.GrayRow``
     Style the widget as a light gray box with darker gray border and 40x40px preview.
     
-``.UploadedFilePreviewWidget GrayRow large``
+``.UploadedFilePreviewWidget.GrayRow.large``
     Make the box 100px high, and the preview 100px wide. Also increase the font sizes.
+
+``.UploadedFilePreviewWidget.PictureFrame``
+    Style as a picture frame.
