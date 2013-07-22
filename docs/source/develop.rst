@@ -81,3 +81,8 @@ Make sure the virtualenv created in the previous section is active::
 Build the docs::
 
     $ make html
+
+You can view the docs at ``build/html/index.html``, but to view them as they
+appear on readthedocs, you will have to run the example server (see
+:file:`examples``, and navigate to
+http://localhost:8000/docs/build/html/index.html.
