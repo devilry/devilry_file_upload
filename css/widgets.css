@@ -30,6 +30,12 @@ button.closeButtonDanger {
   height: 100%;
   width: 0;
 }
+.PictureFrame {
+  width: 200px;
+  height: 250px;
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+}
 .FileUploadWidget {
   /* We do not show the drag and drop elements unless
      * supportsDragAndDropFileUpload is set. */
@@ -132,6 +138,14 @@ button.closeButtonDanger {
   font-size: 18px;
   line-height: 20px;
 }
+.FileUploadWidget.PictureFrame {
+  padding: 12px;
+  color: #b0b0b0;
+  text-align: center;
+}
+.FileUploadWidget.PictureFrame.dragover {
+  border-color: #46a546;
+}
 .UploadedFileWidget,
 .UploadedFilePreviewWidget,
 .FileUploadProgressWidget {
@@ -144,22 +158,42 @@ button.closeButtonDanger {
   top: 4px;
   right: 7px;
 }
-.UploadedFileWidget.GrayFileBox,
-.UploadedFilePreviewWidget.GrayFileBox,
-.FileUploadProgressWidget.GrayFileBox {
+.UploadedFileWidget.GrayRow,
+.UploadedFilePreviewWidget.GrayRow,
+.FileUploadProgressWidget.GrayRow {
   margin: 7px 0;
   border: 1px solid #d9d9d9;
   background-color: #efefef;
   padding: 4px 30px 4px 7px;
 }
-.UploadedFileWidget.GrayFileBox .filename,
-.UploadedFilePreviewWidget.GrayFileBox .filename {
+.FileUploadProgressWidget.PictureFrame {
+  padding: 10px 30px 10px 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #888888;
+}
+.FileUploadProgressWidget.PictureFrame .inlineProgress {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border: none;
+  border-top: 1px solid #d9d9d9;
+  height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.UploadedFileWidget.GrayRow .filename,
+.UploadedFilePreviewWidget.GrayRow .filename {
   font-weight: bold;
   color: #333;
 }
-.UploadedFileWidget.GrayFileBox .deletingMessage,
-.UploadedFilePreviewWidget.GrayFileBox .deletingMessage {
-  background-color: #C43900;
+.UploadedFileWidget.GrayRow .deletingMessage,
+.UploadedFilePreviewWidget.GrayRow .deletingMessage {
+  background-color: #c43900;
   color: #fff;
   font-weight: bold;
   padding: 2px 4px;
@@ -167,10 +201,42 @@ button.closeButtonDanger {
   top: 0;
   right: 0;
 }
-.UploadedFileWidget.GrayFileBox.large .filename,
-.UploadedFilePreviewWidget.GrayFileBox.large .filename {
+.UploadedFileWidget.GrayRow.large .filename,
+.UploadedFilePreviewWidget.GrayRow.large .filename {
   font-size: 18px;
   line-height: 20px;
+}
+.UploadedFileWidget.PictureFrame .filename,
+.UploadedFilePreviewWidget.PictureFrame .filename,
+.UploadedFileWidget.PictureFrame .deletingMessage,
+.UploadedFilePreviewWidget.PictureFrame .deletingMessage {
+  display: block;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 6px 12px;
+}
+.UploadedFileWidget.PictureFrame .filename,
+.UploadedFilePreviewWidget.PictureFrame .filename {
+  bottom: 0;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid #d9d9d9;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: #888888;
+  font-weight: bold;
+}
+.UploadedFileWidget.PictureFrame .deletingMessage,
+.UploadedFilePreviewWidget.PictureFrame .deletingMessage {
+  background-color: #c43900;
+  color: #fff;
+  font-weight: bold;
+  top: 0;
 }
 .UploadedFilePreviewWidget .preview {
   display: none;
@@ -183,6 +249,18 @@ button.closeButtonDanger {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+.UploadedFilePreviewWidget.hasPreview.GrayRow .filename {
+  line-height: 40px;
+  padding-left: 50px;
+}
+.UploadedFilePreviewWidget.hasPreview.GrayRow .preview {
+  width: 40px;
+  font-size: 10px;
+  line-height: 11px;
+  font-style: italic;
+  color: #666;
+  padding: 3px;
   position: absolute;
   left: 0;
   top: 0;
@@ -192,25 +270,29 @@ button.closeButtonDanger {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.UploadedFilePreviewWidget.hasPreview.GrayFileBox .filename {
-  line-height: 40px;
-  padding-left: 50px;
-}
-.UploadedFilePreviewWidget.hasPreview.GrayFileBox .preview {
-  width: 40px;
-  font-size: 10px;
-  line-height: 11px;
-  font-style: italic;
-  color: #666;
-  padding: 3px;
-}
-.UploadedFilePreviewWidget.hasPreview.GrayFileBox.large .filename {
+.UploadedFilePreviewWidget.hasPreview.GrayRow.large .filename {
   line-height: 100px;
   padding-left: 115px;
 }
-.UploadedFilePreviewWidget.hasPreview.GrayFileBox.large .preview {
+.UploadedFilePreviewWidget.hasPreview.GrayRow.large .preview {
   width: 100px;
   font-size: 12px;
   line-height: 14px;
   font-style: italic;
+}
+.UploadedFilePreviewWidget.hasPreview.PictureFrame .preview {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 10px;
+  line-height: 11px;
+  font-style: italic;
+  color: #666;
+  padding: 3px 30px 3px 3px;
+  height: 100%;
+  overflow: hidden;
 }

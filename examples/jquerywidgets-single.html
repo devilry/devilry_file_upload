@@ -7,9 +7,8 @@
              remove this, and provide your own default styles. -->
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
         <style type="text/css">
-            .content {
+            .PictureFrame {
                 margin: 30px auto 0 auto;
-                max-width: 600px;
             }
         </style>
         <link href="../css/widgets.css" rel="stylesheet">
@@ -19,7 +18,7 @@
         <div class="content">
             <div id="uploadedFile"></div>
             <div id="fileUploadProgressContainer"></div>
-            <div id="fileUpload" class="FileUploadWidget FileUploadWidgetSlimLineExpand"></div>
+            <div id="fileUpload" class="FileUploadWidget PictureFrame"></div>
         </div>
 
         <script src="../js/devilry_file_upload.js"></script>
@@ -37,7 +36,7 @@
                         renderFunction: function() {
                             // NOTE: You would typically use a template engine, like Mustache, here.
                             return [
-                                '<div class="UploadedFilePreviewWidget GrayFileBox">',
+                                '<div class="UploadedFilePreviewWidget PictureFrame">',
                                     '<div class="preview"></div>',
                                     '<div class="filename">', uploadedFile.filename, '</div>',
                                     '<button type="button" class="deleteButton closeButtonDanger">&times;</button>',
@@ -93,7 +92,7 @@
                     renderFunction: function(asyncFileUploader) {
                         // NOTE: You would typically use a template engine, like Mustache, here.
                         return [
-                            '<div class="FileUploadProgressWidget GrayFileBox large">',
+                            '<div class="FileUploadProgressWidget PictureFrame">',
                                 '<div class="inlineProgress"><div class="bar"></div></div>',
                                 ' Uploading ', this.asyncFileUploader.getFilenames().join(', '),
                                 '<button type="button" class="abortButton closeButtonDanger">&times;</button>',

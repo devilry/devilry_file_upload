@@ -2,6 +2,18 @@
 @import "components";
 
 @green: #46a546;
+@gray0: #efefef;
+@gray1: #d9d9d9;
+@gray2: #b0b0b0;
+@gray3: #888;
+@red: #C43900;
+
+.PictureFrame {
+    width: 200px;
+    height: 250px;
+    border: 1px solid @gray1;
+    background-color: #fff;
+}
 
 
 .FileUploadWidget {
@@ -91,7 +103,7 @@
     &.FileUploadWidgetSlimLine {
         padding: 6px 4px;
         text-align: center;
-        color: #b0b0b0;
+        color: @gray2;
         font-size: 14px;
         line-height: 16px;
         border: 1px solid #ccc;
@@ -104,7 +116,7 @@
     &.FileUploadWidgetSlimLineExpand {
         padding: 6px 4px;
         text-align: center;
-        color: #b0b0b0;
+        color: @gray2;
         font-size: 14px;
         line-height: 16px;
         border: 1px solid #ccc;
@@ -115,6 +127,15 @@
             border-width: 3px;
             font-size: 18px;
             line-height: 20px;
+        }
+    }
+    &.PictureFrame {
+        padding: 12px;
+        color: @gray2;
+        text-align: center;
+
+        &.dragover {
+            border-color: @green;
         }
     }
 }
@@ -128,22 +149,46 @@
         right: 7px;
     }
 
-    &.GrayFileBox {
+    &.GrayRow {
         margin: 7px 0;
-        border: 1px solid #d9d9d9;
-        background-color: #efefef;
+        border: 1px solid @gray1;
+        background-color: @gray0;
         padding: 4px 30px 4px 7px;
+    }
+    &.PictureFrame {
+    }
+}
+
+.FileUploadProgressWidget {
+    &.PictureFrame {
+        padding: 10px 30px 10px 10px;
+        .box-sizing(border-box);
+        color: @gray3;
+        .inlineProgress {
+            display: block;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            border: none;
+            border-top: 1px solid @gray1;
+            height: 30px;
+            .box-sizing(border-box);
+            .bar {
+                
+            }
+        }
     }
 }
 
 .UploadedFileWidget, .UploadedFilePreviewWidget {
-    &.GrayFileBox {
+    &.GrayRow {
         .filename {
             font-weight: bold;
             color: #333;
         }
         .deletingMessage {
-            background-color: #C43900;
+            background-color: @red;
             color: #fff;
             font-weight: bold;
             padding: 2px 4px;
@@ -156,6 +201,33 @@
                 font-size: 18px;
                 line-height: 20px;
             }
+        }
+    }
+    &.PictureFrame {
+        .filename, .deletingMessage {
+            display: block;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            .box-sizing(border-box);
+            padding: 6px 12px;
+        }
+        .filename {
+            bottom: 0;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, .9);
+            border-top: 1px solid @gray1;
+            white-space: nowrap;
+            text-overflow:ellipsis;
+            text-align: center;
+            color: @gray3;
+            font-weight: bold;
+        }
+        .deletingMessage {
+            background-color: @red;
+            color: #fff;
+            font-weight: bold;
+            top: 0;
         }
     }
 }
@@ -171,15 +243,8 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            //float: left;
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            overflow: hidden;
-            .box-sizing(border-box);
         }
-        &.GrayFileBox {
+        &.GrayRow {
             .filename {
                 line-height: 40px;
                 padding-left: 50px;
@@ -191,6 +256,12 @@
                 font-style: italic;
                 color: #666;
                 padding: 3px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                overflow: hidden;
+                .box-sizing(border-box);
             }
             &.large {
                 .filename {
@@ -203,6 +274,23 @@
                     line-height: 14px;
                     font-style: italic;
                 }
+            }
+        }
+        &.PictureFrame {
+            .preview {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                .box-sizing(border-box);
+                font-size: 10px;
+                line-height: 11px;
+                font-style: italic;
+                color: #666;
+                padding: 3px 30px 3px 3px;
+                height: 100%;
+                overflow: hidden;
             }
         }
     }

@@ -245,7 +245,7 @@ something like this html:
 
 .. code-block:: html
 
-    <div class="FileUploadProgressWidget GrayFileBox">
+    <div class="FileUploadProgressWidget GrayRow">
         <div class="inlineProgress">
             <div class="bar"></div>
         </div>
@@ -264,10 +264,10 @@ CSS
 ``.FileUploadProgressWidget``
     Basic layout of the widget.
 
-``.FileUploadProgressWidget GrayFileBox``
+``.FileUploadProgressWidget GrayRow``
     Style the progress widget as a light gray box with darker gray border.
     
-``.FileUploadProgressWidget GrayFileBox large``
+``.FileUploadProgressWidget GrayRow large``
     Make the box and fonts larger.
 
 
@@ -341,7 +341,7 @@ something like this html:
 
 .. code-block:: html
 
-    <div class="UploadedFilePreviewWidget GrayFileBox">
+    <div class="UploadedFilePreviewWidget GrayRow">
        <div class="filename">myfile.txt</div>
        <button type="button" class="deleteButton closeButtonDanger">&times;</button>
        <div class="deletingMessage">Deleting...</div>
@@ -354,10 +354,10 @@ CSS
 ``.UploadedFileWidget``
     Basic layout of the widget.
 
-``.UploadedFileWidget GrayFileBox``
+``.UploadedFileWidget GrayRow``
     Style the widget as a light gray box with darker gray border.
     
-``.UploadedFileWidget GrayFileBox large``
+``.UploadedFileWidget GrayRow large``
     Make the box and fonts larger.
 
 
@@ -407,7 +407,7 @@ include a preview-div in the HTML rendered by ``renderFunction``:
 
 .. code-block:: html
 
-    <div class="UploadedFilePreviewWidget GrayFileBox">
+    <div class="UploadedFilePreviewWidget GrayRow">
        <div class="preview"></div>
        <div class="filename">myfile.txt</div>
        <button type="button" class="deleteButton closeButtonDanger">&times;</button>
@@ -420,8 +420,8 @@ CSS
 ``.UploadedFilePreviewWidget``
     Basic layout of the widget.
 
-``.UploadedFilePreviewWidget GrayFileBox``
+``.UploadedFilePreviewWidget GrayRow``
     Style the widget as a light gray box with darker gray border and 40x40px preview.
     
-``.UploadedFilePreviewWidget GrayFileBox large``
+``.UploadedFilePreviewWidget GrayRow large``
     Make the box 100px high, and the preview 100px wide. Also increase the font sizes.
