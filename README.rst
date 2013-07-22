@@ -16,4 +16,4 @@ The project is under development, and should not be used yet.
 Docs
 ====
 
-See ``docs/build/html/index.html``.
+See https://devilry_file_upload.readthedocs.org/en/latest/.
