@@ -87,5 +87,7 @@ application perfectly::
             contentType: "text/html"
         })
 
+.. note:: The last example is compatible with our examples.
+
 We also provide an example in ``examples/server.py``, but you should not even
 consider using that example in production.
