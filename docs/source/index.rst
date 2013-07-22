@@ -30,6 +30,7 @@ TOC
    examples
    devilry_file_upload
    jquerywidgets
+   server
    develop
    license
 
