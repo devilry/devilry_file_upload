@@ -170,17 +170,19 @@ browsers.
         return this.htmlElement.addEventListener(eventName, callback, false);
       } else if (this.htmlElement.attachEvent) {
         if (eventName === 'change' && this.isFileField()) {
-          this.on('click', function() {
+          return this.on('click', function(e) {
             return defer(function() {
-              return callback.apply(_this);
+              if ((_this.htmlElement.value != null) && _this.htmlElement.value !== '') {
+                return callback.apply(_this);
+              }
             });
           });
-          return;
+        } else {
+          if (eventName in this.attachEventEventMap) {
+            eventName = this.attachEventEventMap[eventName];
+          }
+          return this.htmlElement.attachEvent(eventName, callback);
         }
-        if (eventName in this.attachEventEventMap) {
-          eventName = this.attachEventEventMap[eventName];
-        }
-        return this.htmlElement.attachEvent(eventName, callback);
       }
     };
 

@@ -108,13 +108,14 @@ class ElementWrapper
             @htmlElement.addEventListener(eventName, callback, false)
         else if (@htmlElement.attachEvent)
             if eventName == 'change' and @isFileField()
-                @on 'click', =>
+                @on 'click', (e) =>
                     defer =>
-                        callback.apply(@)
-                return
-            if eventName of @attachEventEventMap
-                eventName = @attachEventEventMap[eventName]
-            @htmlElement.attachEvent(eventName, callback)
+                        if @htmlElement.value? and @htmlElement.value != ''
+                            callback.apply(@)
+            else
+                if eventName of @attachEventEventMap
+                    eventName = @attachEventEventMap[eventName]
+                @htmlElement.attachEvent(eventName, callback)
 
     remove: ->
         @htmlElement.parentNode.removeChild(@htmlElement)
