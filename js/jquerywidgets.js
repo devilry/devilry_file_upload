@@ -19,7 +19,7 @@ Style guide
 
 
 (function() {
-  var FileUploadProgressContainerWidget, FileUploadProgressWidget, FileUploadWidget, UploadedFilePreviewWidget, UploadedFileWidget,
+  var FileUploadProgressWidget, FileUploadWidget, UploadedFilePreviewWidget, UploadedFileWidget,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -255,21 +255,23 @@ Style guide
       this.asyncFileUploader.on('progress', this._onProgress);
       this.asyncFileUploader.on('finished', this._onFinished);
       if (devilry_file_upload.browserInfo.supportsXhrFileUpload()) {
-        this.abortButtonJq = this.elementJq.find(abortButtonSelector);
+        if (abortButtonSelector != null) {
+          this.abortButtonJq = this.elementJq.find(abortButtonSelector);
+        }
         this.abortButtonJq.on('click', this._onAbort);
         this.abortButtonJq.show();
       }
     }
 
-    FileUploadProgressWidget.prototype.destroy = function() {
+    FileUploadProgressWidget.prototype._destroy = function() {
       this.asyncFileUploader.off('progress', this._onProgress);
-      this.asyncFileUploader.off('finished', this._onFinished);
       return this.elementJq.remove();
     };
 
     FileUploadProgressWidget.prototype._onAbort = function() {
       this.asyncFileUploader.abort();
-      return this.destroy();
+      this.asyncFileUploader.off('finished', this._onFinished);
+      return this._destroy();
     };
 
     FileUploadProgressWidget.prototype._onProgress = function(asyncFileUploader, state) {
@@ -278,51 +280,21 @@ Style guide
     };
 
     FileUploadProgressWidget.prototype._onFinished = function(asyncFileUploader, state) {
-      return this.destroy();
+      this._destroy();
+      return new devilry_file_upload.ObservableResult({
+        remove: true
+      });
     };
 
     return FileUploadProgressWidget;
 
   })();
 
-  FileUploadProgressContainerWidget = (function() {
-
-    function FileUploadProgressContainerWidget(options) {
-      this._onUploadStart = __bind(this._onUploadStart, this);      options = devilry_file_upload.applyOptions('FileUploadProgressContainerWidget', options, {
-        progressSelector: void 0,
-        progressBarSelector: void 0,
-        abortButtonSelector: void 0
-      }, ['fileUpload', 'renderFunction', 'containerJq']);
-      this.fileUpload = options.fileUpload, this.renderFunction = options.renderFunction, this.progressSelector = options.progressSelector, this.progressBarSelector = options.progressBarSelector, this.abortButtonSelector = options.abortButtonSelector, this.containerJq = options.containerJq;
-      this.fileUpload.on('uploadStart', this._onUploadStart);
-    }
-
-    FileUploadProgressContainerWidget.prototype.destroy = function() {
-      return this.fileUpload.off('uploadStart', this._onUploadStart);
-    };
-
-    FileUploadProgressContainerWidget.prototype._onUploadStart = function(fileUpload, asyncFileUploader) {
-      var progressWidget;
-      progressWidget = new FileUploadProgressWidget({
-        asyncFileUploader: asyncFileUploader,
-        renderFunction: this.renderFunction,
-        progressSelector: this.progressSelector,
-        progressBarSelector: this.progressBarSelector,
-        abortButtonSelector: this.abortButtonSelector
-      });
-      return this.containerJq.append(progressWidget.elementJq);
-    };
-
-    return FileUploadProgressContainerWidget;
-
-  })();
-
   window.devilry_file_upload.jquery = {
-    UploadedFileWidget: UploadedFileWidget,
-    UploadedFilePreviewWidget: UploadedFilePreviewWidget,
     FileUploadWidget: FileUploadWidget,
     FileUploadProgressWidget: FileUploadProgressWidget,
-    FileUploadProgressContainerWidget: FileUploadProgressContainerWidget
+    UploadedFileWidget: UploadedFileWidget,
+    UploadedFilePreviewWidget: UploadedFilePreviewWidget
   };
 
 }).call(this);

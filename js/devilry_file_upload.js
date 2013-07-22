@@ -7,7 +7,7 @@ browsers.
 
 
 (function() {
-  var ArrayUtils, AsyncFileUploader, BrowserInfo, ElementWrapper, FileUpload, FileWrapper, HiddenIframe, Observable, applyOptions, browserInfo, dataTransferContainsFiles, defer, prevent_default_window_drophandler,
+  var ArrayUtils, AsyncFileUploader, BrowserInfo, ElementWrapper, FileUpload, FileWrapper, HiddenIframe, Observable, ObservableResult, applyOptions, browserInfo, dataTransferContainsFiles, defer, prevent_default_window_drophandler,
     __slice = [].slice,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -255,6 +255,18 @@ browsers.
 
   browserInfo = new BrowserInfo();
 
+  ObservableResult = (function() {
+
+    function ObservableResult(options) {
+      this.isObservableResult = true;
+      this.abort = options.abort === true;
+      this.remove = options.remove === true;
+    }
+
+    return ObservableResult;
+
+  })();
+
   Observable = (function() {
 
     function Observable(options) {
@@ -290,17 +302,29 @@ browsers.
     };
 
     Observable.prototype.fireEvent = function() {
-      var abort, args, listener, listeners, name, result, _i, _len;
+      var abort, args, autoremove, item, listener, listeners, name, result, _i, _j, _len, _len1;
       name = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       listeners = this.listeners[name];
       abort = false;
       if (listeners != null) {
+        autoremove = [];
         for (_i = 0, _len = listeners.length; _i < _len; _i++) {
           listener = listeners[_i];
-          result = listener.apply(this, args);
-          if (result === true) {
-            abort = true;
+          if (listener != null) {
+            result = listener.apply(this, args);
+            if (result != null ? result.isObservableResult : void 0) {
+              if (result.abort) {
+                abort = true;
+              }
+              if (result.remove) {
+                autoremove.push([name, listener]);
+              }
+            }
           }
+        }
+        for (_j = 0, _len1 = autoremove.length; _j < _len1; _j++) {
+          item = autoremove[_j];
+          this.off(item[0], item[1]);
         }
       }
       return abort;
@@ -663,6 +687,7 @@ browsers.
     FileWrapper: FileWrapper,
     prevent_default_window_drophandler: prevent_default_window_drophandler,
     Observable: Observable,
+    ObservableResult: ObservableResult,
     applyOptions: applyOptions,
     HiddenIframe: HiddenIframe
   };

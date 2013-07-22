@@ -190,59 +190,38 @@ class FileUploadProgressWidget
         @asyncFileUploader.on('progress', @_onProgress)
         @asyncFileUploader.on('finished', @_onFinished)
         if devilry_file_upload.browserInfo.supportsXhrFileUpload()
-            @abortButtonJq = @elementJq.find(abortButtonSelector)
+            if abortButtonSelector?
+                @abortButtonJq = @elementJq.find(abortButtonSelector)
             @abortButtonJq.on('click', @_onAbort)
             @abortButtonJq.show()
 
-    destroy: ->
+    _destroy: ->
         @asyncFileUploader.off('progress', @_onProgress)
-        @asyncFileUploader.off('finished', @_onFinished)
         @elementJq.remove()
 
     _onAbort: =>
         @asyncFileUploader.abort()
-        @destroy()
+        @asyncFileUploader.off('finished', @_onFinished)
+        @_destroy()
 
     _onProgress: (asyncFileUploader, state) =>
         @progressJq.show()
         @progressBarJq.width("#{state}%")
 
     _onFinished: (asyncFileUploader, state) =>
-        @destroy()
-
-
-
-class FileUploadProgressContainerWidget
-    constructor: (options) ->
-        options = devilry_file_upload.applyOptions('FileUploadProgressContainerWidget', options, {
-            progressSelector: undefined
-            progressBarSelector: undefined
-            abortButtonSelector: undefined
-        }, ['fileUpload', 'renderFunction', 'containerJq'])
-        {@fileUpload, @renderFunction,
-            @progressSelector, @progressBarSelector, @abortButtonSelector,
-            @containerJq} = options
-        @fileUpload.on('uploadStart', @_onUploadStart)
-
-    destroy: ->
-        @fileUpload.off('uploadStart', @_onUploadStart)
-
-    _onUploadStart: (fileUpload, asyncFileUploader) =>
-        progressWidget = new FileUploadProgressWidget({
-            asyncFileUploader: asyncFileUploader
-            renderFunction: @renderFunction
-            progressSelector: @progressSelector
-            progressBarSelector: @progressBarSelector
-            abortButtonSelector: @abortButtonSelector
+        @_destroy()
+        return new devilry_file_upload.ObservableResult({
+            # We can not use @asyncFileUploader.off because we can not remove
+            # _this_ function from the event loop while the loop is running
+            remove: true
         })
-        @containerJq.append(progressWidget.elementJq)
+
 
 
 
 window.devilry_file_upload.jquery = {
-    UploadedFileWidget: UploadedFileWidget
-    UploadedFilePreviewWidget: UploadedFilePreviewWidget
     FileUploadWidget: FileUploadWidget
     FileUploadProgressWidget: FileUploadProgressWidget
-    FileUploadProgressContainerWidget: FileUploadProgressContainerWidget
+    UploadedFileWidget: UploadedFileWidget
+    UploadedFilePreviewWidget: UploadedFilePreviewWidget
 }

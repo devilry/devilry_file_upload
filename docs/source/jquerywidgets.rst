@@ -16,12 +16,10 @@ widgets for all three steps:
 
 2. Monitor the upload progress:
 
-    - :class:`devilry_file_upload.jquery.FileUploadProgressContainerWidget`
-    - :class:`devilry_file_upload.jquery.FileUploadWidget`
+    - :class:`devilry_file_upload.jquery.FileUploadProgressWidget`
 
 3. List/preview uploaded files:
 
-    - :class:`devilry_file_upload.jquery.UploadedFilesWidget`
     - :class:`devilry_file_upload.jquery.UploadedFileWidget`
     - :class:`devilry_file_upload.jquery.UploadedFilePreviewWidget`
 
@@ -160,29 +158,118 @@ Methods
     Detach all event listeners from the object.
 
 
-FileUploadProgressContainerWidget
-=================================
-.. class:: devilry_file_upload.jquery.FileUploadProgressContainerWidget(options)
+
+FileUploadProgressWidget
+========================
+.. class:: devilry_file_upload.jquery.FileUploadProgressWidget(options)
+
+    A widget showing the progress of a single file upload. Supports multifile
+    upload.
+
+    :param options: Object with the following attributes:
+
+        fileUpload (required)
+            A :class:`devilry_file_upload.FileUpload` object.
+
+        renderFunction (required)
+            A render function that renders 
+
+        progressSelector
+            A CSS selector matching the progress box element.
+            This must be a parent of the element matching the
+            ``progressBarSelector``. This element is hidden until
+            we get a progress event, which we do not get for old browsers or
+            for small files. Defaults to ``.inlineProgress``.
+
+        progressBarSelector
+            A CSS selector matching the progress bar element within the element
+            matched by ``progressSelector``. The width of this element is set to
+            match the percent argument of the ``progress``-event.
+            Defaults to ``.bar``.
+
+        abortButtonSelector
+            A CSS selector matching the abort button. Set this to ``null`` if
+            you do not provide an abort-button. Defaults to ``.abortButton``.
 
 
+.. attribute:: devilry_file_upload.jquery.FileUploadProgressWidget.elementJq
+
+    The jQuery element wrapping the HTML rendered by ``renderFunction``.
+    
 
 
-FileUploadWidget
-================
-.. class:: devilry_file_upload.jquery.FileUploadWidget(options)
+Usage
+-----
+
+Add an empty ``div``-element wherever you want to render your progress indicators:
+
+.. code-block:: html
+
+    <div id="myFileUploadProgressContainer"></div>
+
+In the ``uploadStart`` event handler for your
+:class:`devilry_file_upload.FileUpload`, create a ``FileUploadProgressWidget``,
+and add it to your ``div``-element::
+
+    var fileUpload = new devilry_file_upload.FileUpload({
+        listeners: {
+            uploadStart: function(fileUpload, asyncFileUploader) {
+                var uploadProgressWidget = new devilry_file_upload.jquery.FileUploadProgressWidget({
+                    fileUpload: fileUpload,
+                    asyncFileUploader: asyncFileUploader,
+                    renderFunction: function(asyncFileUploader) {
+                        ...
+                    }
+                });
+                $('#myFileUploadProgressContainer').append(uploadProgressWidget.elementJq);
+            }
+        }
+    });
+    var fileUploadWidget = new devilry_file_upload.jquery.FileUploadWidget({
+        fileUpload: fileUpload
+    });
+
+To get it working with the provided CSS, use a ``renderFunction`` that provides
+something like this html:
+
+.. code-block:: html
+
+    <div class="FileUploadProgressWidget GrayFileBox">
+        <div class="inlineProgress">
+            <div class="bar"></div>
+        </div>
+        Uploading myfile.txt
+        <button type="button" class="abortButton closeButtonDanger">&times;</button>
+    </div>
+
+You can use something very different, just make sure to set the
+``progressSelector``, ``progressBarSelector`` and ``abortButtonSelector``
+options accordingly.
 
 
+CSS
+---
 
-UploadedFilesWidget
-===================
-.. class:: devilry_file_upload.jquery.UploadedFilesWidget
+``.FileUploadProgressWidget``
+    Basic layout of the widget.
+
+``.FileUploadProgressWidget GrayFileBox``
+    Style the progress widget as a light gray box with darker gray border.
+    
+``.FileUploadProgressWidget GrayFileBox large``
+    Make the box and fonts larger.
+
 
 
 UploadedFileWidget
 ==================
 .. class:: devilry_file_upload.jquery.UploadedFileWidget
 
+    A widget for displaying uploaded files, with an optional delete button.
+
 
 UploadedFilePreviewWidget
 =========================
 .. class:: devilry_file_upload.jquery.UploadedFilePreviewWidget
+
+    Extends :class:`devilry_file_upload.jquery.UploadedFileWidget` with previews.

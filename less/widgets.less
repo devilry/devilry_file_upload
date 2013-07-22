@@ -134,9 +134,17 @@
 .UploadedFileWidget, .UploadedFilePreviewWidget {
     &.GrayFileBox {
         .filename {
-            font-size: 14px;
             font-weight: bold;
             color: #333;
+        }
+        .deletingMessage {
+            background-color: #C43900;
+            color: #fff;
+            font-weight: bold;
+            padding: 2px 4px;
+            position: absolute;
+            top: 0;
+            right: 0;
         }
         &.large {
             .filename {

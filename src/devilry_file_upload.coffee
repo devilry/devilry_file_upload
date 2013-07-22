@@ -172,6 +172,13 @@ browserInfo = new BrowserInfo()
 
 
 
+class ObservableResult
+    constructor: (options) ->
+        @isObservableResult = true
+        @abort = options.abort == true
+        @remove = options.remove == true
+
+
 class Observable
     constructor: (options) ->
         {listeners} = options
@@ -198,10 +205,17 @@ class Observable
         listeners = @listeners[name]
         abort = false
         if listeners?
+            autoremove = []
             for listener in listeners
-                result = listener.apply(@, args)
-                if result == true
-                    abort = true
+                if listener?
+                    result = listener.apply(@, args)
+                    if result?.isObservableResult
+                        if result.abort
+                            abort = true
+                        if result.remove
+                            autoremove.push([name, listener])
+            for item in autoremove
+                @off(item[0], item[1])
         return abort
 
                 
@@ -452,6 +466,7 @@ window.devilry_file_upload = {
     FileWrapper: FileWrapper
     prevent_default_window_drophandler: prevent_default_window_drophandler
     Observable: Observable
+    ObservableResult: ObservableResult
     applyOptions: applyOptions
     HiddenIframe: HiddenIframe
 }

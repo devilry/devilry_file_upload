@@ -352,9 +352,10 @@ class Observable
         Fire/trigger an event. All listeners registered with :func:`.on` is
         invoked in the order they where added.
 
-        If an event listener returns ``true``, it signals that further
-        processing after this event should be aborted. Observables using this
-        feature should use something like this::
+        A listener may return a :class:`devilry_file_upload.ObservableResult` object.
+        If the ObservableResult has ``abort`` set to ``true``, processing after
+        this event should be aborted. Observables using this feature should use
+        something like this::
 
             abort = fireEvent('myevent')
             if(!abort) {
@@ -364,6 +365,31 @@ class Observable
         Most events do not support abort --- events using abort includes
         documentation for aborting.
 
+        If the ObservableResult object has ``remove`` set to ``true``, the
+        listener will be removed after all handlers for that event has
+        completed. This is needed when you want to run :func:`.off` on a
+        function within itself, because removing the function would change
+        the event listener array while fireEvent is looping through it.
+
+
+class ObservableResult
+======================
+
+.. class:: devilry_file_upload.ObservableResult(options)
+
+    May be returned by event listeners to trigger special behaviors.
+    See :class:`devilry_file_upload.Observable` for more info about
+    ObservableResult.
+
+    :param options: An object with the following attributes:
+
+        remove (defaults to ``false``)
+            If this is ``true``, the listener listener will be removed at the
+            end of the current fireEvent loop.
+        abort (defaults to ``false``)
+            If this is ``true``, the Observable calling ``fireEvent`` may
+            choose to stop its current action. This is up to the Observable,
+            and should be documented for any event using the feature.
 
 function applyOptions
 =====================

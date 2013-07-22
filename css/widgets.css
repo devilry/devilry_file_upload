@@ -150,9 +150,18 @@ button.closeButtonDanger {
 }
 .UploadedFileWidget.GrayFileBox .filename,
 .UploadedFilePreviewWidget.GrayFileBox .filename {
-  font-size: 14px;
   font-weight: bold;
   color: #333;
+}
+.UploadedFileWidget.GrayFileBox .deletingMessage,
+.UploadedFilePreviewWidget.GrayFileBox .deletingMessage {
+  background-color: #C43900;
+  color: #fff;
+  font-weight: bold;
+  padding: 2px 4px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .UploadedFileWidget.GrayFileBox.large .filename,
 .UploadedFilePreviewWidget.GrayFileBox.large .filename {
