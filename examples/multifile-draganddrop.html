@@ -22,8 +22,7 @@
 
     <body>
         <div class="content">
-            <form id="myform" action="/upload" method="post" enctype="multipart/form-data" class="FileUploadWidget">
-                <input id="fileUploadField" type="file" name="files" multiple>
+            <div id="fileUpload" class="FileUploadWidget FileUploadWidgetLargeStriped">
                 <div class="dragHelp">
                     Upload files by dragging and dropping them into this box, or
                     by <a href="#" id="fileUploadLink">uploading them</a>.
@@ -32,19 +31,25 @@
                     Drop your files to upload them.
                 </div>
                 <div class="dropTarget" id="dropTarget"></div>
-            </form>
+            </div>
             <div id="responses"><h2>Server responses:</h2></div>
         </div>
 
         <script src="../js/devilry_file_upload.js"></script>
         <script>
-            var form = document.getElementById('myform');
+            devilry_file_upload.prevent_default_window_drophandler();
+            var container = document.getElementById('fileUpload');
 
-            var uploader = new devilry_file_upload.FileUpload({
-                formElement: form,
+            var fileUpload = new devilry_file_upload.FileUpload({
+                containerElement: container,
 
-                // Enable drag and drop
-                dropTargetElement: document.getElementById('dropTarget'),
+                widgetRenderFunction: function() {
+                    return [
+                        '<form action="/upload" method="post" enctype="multipart/form-data">',
+                            '<input type="file" name="files" multiple>',
+                        '</form>'
+                    ].join('');
+                },
 
                 // Event handlers
                 listeners: {
@@ -54,26 +59,32 @@
                             responsesElement = document.getElementById('responses')
                             responsesElement.innerHTML = responsesElement.innerHTML + data + '\n\n';
                         });
-                    },
-                    dragenter: function() {
-                        // NOTE: You may want to use the addClass implementation from a library like jQuery here
-                        form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload dragover')
-                    },
-                    dragleave: function() {
-                        // NOTE: You may want to use the removeClass('dragover') implementation from a library like jQuery here
-                        form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload')
-                    },
-                    dropFiles: function() {
-                        // NOTE: You may want to use the removeClass('dragover') implementation from a library like jQuery here
-                        form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload')
                     }
                 }
             });
+
+
             if(devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
-                form.setAttribute('class', 'FileUploadWidget supportsDragAndDropFileUpload');
+                container.setAttribute('class', 'FileUploadWidget FileUploadWidgetLargeStriped supportsDragAndDropFileUpload');
                 document.getElementById('fileUploadLink').addEventListener('click', function() {
-                    document.getElementById('fileUploadField').click();
+                    fileUpload.getCurrentFileFieldElement().click();
                 }, false);
+
+                var dragAndDrop = new devilry_file_upload.DragAndDropFiles({
+                    dropTargetElement: document.getElementById('dropTarget'),
+                    listeners: {
+                        dragenter: function() {
+                            container.setAttribute('class', 'FileUploadWidget FileUploadWidgetLargeStriped supportsDragAndDropFileUpload dragover')
+                        },
+                        dragleave: function() {
+                            container.setAttribute('class', 'FileUploadWidget FileUploadWidgetLargeStriped supportsDragAndDropFileUpload')
+                        },
+                        dropfiles: function(dragAndDrop, files) {
+                            container.setAttribute('class', 'FileUploadWidget FileUploadWidgetLargeStriped supportsDragAndDropFileUpload')
+                            fileUpload.upload(files);
+                        }
+                    }
+                });
             }
         </script>
     </body>
