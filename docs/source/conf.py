@@ -103,7 +103,8 @@ html_theme_options = {
     #'bootswatch_theme': "united",
     #'bootswatch_theme': "amelia",
     'bootswatch_theme': "journal",
-    'navbar_fixed_top': 'false',
+    'navbar_fixed_top': 'true',
+    'source_link_position': None
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
