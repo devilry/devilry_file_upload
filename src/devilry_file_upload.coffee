@@ -367,14 +367,10 @@ class FileUpload extends Observable
         super(options)
         options = applyOptions('FileUpload', options, {
             uploadOnChange: true
-            dropTargetSelector: null
-            dropEffect: 'copy'
         }, ['containerElement', 'widgetRenderFunction'])
         {containerElement, @widgetRenderFunction,
-            @uploadOnChange,
-            @dropTargetSelector, @dropEffect} = options
+            @uploadOnChange} = options
         @container = new ElementWrapper(containerElement)
-        @draggingFiles = false
         @_createWidget()
 
     _createWidget: ->
@@ -383,11 +379,6 @@ class FileUpload extends Observable
         @current.setInnerHtml(renderedHtml)
         @container.appendChild(@current)
         @_getCurrentFileField().on('change', @_onChange)
-        if @dropTargetSelector? and browserInfo.supportsDragAndDropFileUpload()
-            @dropTargetElement = @current.down(@dropTargetSelector)
-            if @dropTargetElement == null
-                throw "No drop target element found for selector: #{@dropTargetSelector}"
-            @_setupDragEvents()
         @fireEvent('createWidget', @)
 
     getContainerElement: ->
@@ -446,11 +437,21 @@ class FileUpload extends Observable
                 abort: true
             })
 
-    _setupDragEvents: ->
-        @dropTargetElement.on('dragover', @_onDragOver)
-        @dropTargetElement.on('dragenter', @_onDragEnter)
-        @dropTargetElement.on('dragleave', @_onDragLeave)
-        @dropTargetElement.on('drop', @_onDrop)
+
+
+class DragAndDropFiles extends Observable
+    constructor: (options) ->
+        super(options)
+        options = applyOptions('DragAndDropFiles', options, {
+            dropEffect: 'copy'
+        }, ['dropTargetElement'])
+        {dropTargetElement, @dropEffect} = options
+        @draggingFiles = false
+        @dropTarget = new ElementWrapper(dropTargetElement)
+        @dropTarget.on('dragover', @_onDragOver)
+        @dropTarget.on('dragenter', @_onDragEnter)
+        @dropTarget.on('dragleave', @_onDragLeave)
+        @dropTarget.on('drop', @_onDrop)
 
     _onDragOver: (e) =>
         e.preventDefault()
@@ -476,10 +477,9 @@ class FileUpload extends Observable
     _onDrop: (e) =>
         e.preventDefault()
         if e.dataTransfer.files.length > 0
-            @fireEvent('dropFiles', e, e.dataTransfer.files)
-            if @uploadOnChange
-                @upload(e.dataTransfer.files)
+            @fireEvent('dropfiles', e, e.dataTransfer.files)
         return false
+
 
 prevent_default_window_drophandler = ->
     if window.addEventListener
@@ -493,6 +493,7 @@ prevent_default_window_drophandler = ->
 
 window.devilry_file_upload = {
     FileUpload: FileUpload
+    DragAndDropFiles: DragAndDropFiles
     AsyncFileUploader: AsyncFileUploader
     browserInfo: browserInfo
     FileWrapper: FileWrapper
