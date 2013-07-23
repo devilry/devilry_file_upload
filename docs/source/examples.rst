@@ -39,3 +39,7 @@ Detailed guides for each example
     :maxdepth: 1
 
     examples/simple
+    examples/simple-multifile
+    examples/multifile-draganddrop
+    examples/jquerywidgets-multifile
+    examples/jquerywidgets-singlefile
