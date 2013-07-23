@@ -25,7 +25,12 @@
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="../js/jquerywidgets.js"></script>
         <script>
-            function handleFileUploadSuccess(fileUpload, asyncFileUploader, jsonData) {
+
+            /*
+            Called when an upload succeeds.
+            (Called from the success-event handler for the asyncFileUploader in handleUploadStart())
+            */
+            function handleUploadSuccess(fileUpload, asyncFileUploader, jsonData) {
                 var files = asyncFileUploader.getFileobjectsByName();
                 var i;
                 for(i=0; i<jsonData.uploaded_files.length; i++) {
@@ -74,6 +79,10 @@
             }
 
 
+            /*
+            Called when an upload starts.
+            (Configured in the constructor for devilry_file_upload.FileUpload)
+            */
             function handleUploadStart(fileUpload, asyncFileUploader) {
                 if(asyncFileUploader.hasMultipleFiles()) {
                     alert('You can only upload a single file.');
@@ -108,7 +117,7 @@
                     // uploadedFilesWidget.
                     jsonData = jQuery.parseJSON(data);
                     if(jsonData.success) {
-                        handleFileUploadSuccess(fileUpload, asyncFileUploader, jsonData);
+                        handleUploadSuccess(fileUpload, asyncFileUploader, jsonData);
                     } else {
                         fileUpload.resume();
                         alert("Error: " + jsonData.error);
@@ -128,9 +137,11 @@
 
 
 
+            ///////////////////////////////////////////////////
             // 
             // Setup our file upload UI
             //
+            ///////////////////////////////////////////////////
 
             devilry_file_upload.prevent_default_window_drophandler();
             var fileUpload = new devilry_file_upload.FileUpload({

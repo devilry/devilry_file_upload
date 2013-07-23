@@ -26,10 +26,12 @@
         <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="../js/jquerywidgets.js"></script>
         <script>
-            devilry_file_upload.prevent_default_window_drophandler();
 
-
-            function handleFileUploadSuccess(asyncFileUploader, jsonData) {
+            /*
+            Called when an upload succeeds.
+            (Called from the success-event handler for the asyncFileUploader in handleUploadStart())
+            */
+            function handleUploadSuccess(asyncFileUploader, jsonData) {
                 var files = asyncFileUploader.getFileobjectsByName();
                 var i;
                 for(i=0; i<jsonData.uploaded_files.length; i++) {
@@ -81,15 +83,74 @@
             }
 
 
-            var fileUpload = new devilry_file_upload.FileUpload({
+            /*
+            Called when an upload starts.
+            (Configured in the constructor for devilry_file_upload.FileUpload)
+            */
+            function handleUploadStart(fileUpload, asyncFileUploader) {
+                var uploadProgressWidget = new devilry_file_upload.jquery.FileUploadProgressWidget({
+                    fileUpload: fileUpload,
+                    asyncFileUploader: asyncFileUploader,
+                    renderFunction: function(asyncFileUploader) {
+                        // NOTE: You would typically use a template engine, like Mustache, here.
+                        return [
+                            '<div class="FileUploadProgressWidget GrayRow large">',
+                                '<div class="inlineProgress">',
+                                    '<div class="bar"></div>',
+                                '</div>',
+                                ' Uploading ',
+                                this.asyncFileUploader.getFilenames().join(', '),
+                                '<button type="button" class="abortButton closeButtonDanger">&times;</button>',
+                            '</div>'
+                        ].join('');
+                    }
+                });
+                $('#fileUploadProgressContainer').append(uploadProgressWidget.elementJq);
 
+                asyncFileUploader.on('finished', function(asyncFileUploader, data) {
+                    // In uploadFinished, we parse the response from the
+                    // server, and add the uploaded files to the
+                    // uploadedFilesWidget.
+                    jsonData = jQuery.parseJSON(data);
+                    if(jsonData.success) {
+                        handleUploadSuccess(asyncFileUploader, jsonData);
+                    } else {
+                        alert("Error: " + jsonData.error);
+                    }
+                });
+
+                asyncFileUploader.on('abort', function(asyncFileUploader) {
+                    alert('Upload was aborted. This example does not handle partial uploads, so you will probably have a partially uploaded file in your examples/ folder.');
+                });
+                asyncFileUploader.on('error', function(asyncFileUploader, e) {
+                    alert('The upload failed.');
+                    uploadProgressWidget.destroy();
+                });
+            }
+            
+
+
+            ///////////////////////////////////////////////////
+            // 
+            // Setup our file upload UI
+            //
+            ///////////////////////////////////////////////////
+
+            devilry_file_upload.prevent_default_window_drophandler();
+            var fileUpload = new devilry_file_upload.FileUpload({
                 // The FileUpload API is plain JS (no jQuery), so we have to
                 // send in the html elements, not the jQuery objects.
-                //formElement: $('#myform').get(0),
-                //dropTargetElement: $('#myform .dropTarget').get(0),
-                dropTargetSelector: '.dropTarget',
                 containerElement: $('#fileUpload').get(0),
 
+                // Eventlisteners
+                listeners: {
+                    uploadStart: handleFileUploadStart
+                },
+
+                // Enable drag and dropping files into one of the elements in the widget
+                dropTargetSelector: '.dropTarget',
+
+                // Render the widget
                 widgetRenderFunction: function() {
                     return [
                         '<form action="/upload" method="post" enctype="multipart/form-data">',
@@ -103,57 +164,6 @@
                         '<div class="dropTarget"></div>'
                     ].join('');
                 },
-
-                // Enable drag and drop
-                allowDragAndDrop: true,
-
-                // Event handlers
-                listeners: {
-
-                    // When an upload start, we get a
-                    // ``devilry_file_upload.AsyncFileUploader`` where we can
-                    // listen for the ``progress`` and ``finished`` events.
-                    uploadStart: function(fileUpload, asyncFileUploader) {
-                        var uploadProgressWidget = new devilry_file_upload.jquery.FileUploadProgressWidget({
-                            fileUpload: fileUpload,
-                            asyncFileUploader: asyncFileUploader,
-                            renderFunction: function(asyncFileUploader) {
-                                // NOTE: You would typically use a template engine, like Mustache, here.
-                                return [
-                                    '<div class="FileUploadProgressWidget GrayRow large">',
-                                        '<div class="inlineProgress">',
-                                            '<div class="bar"></div>',
-                                        '</div>',
-                                        ' Uploading ',
-                                        this.asyncFileUploader.getFilenames().join(', '),
-                                        '<button type="button" class="abortButton closeButtonDanger">&times;</button>',
-                                    '</div>'
-                                ].join('');
-                            }
-                        });
-                        $('#fileUploadProgressContainer').append(uploadProgressWidget.elementJq);
-
-                        asyncFileUploader.on('finished', function(asyncFileUploader, data) {
-                            // In uploadFinished, we parse the response from the
-                            // server, and add the uploaded files to the
-                            // uploadedFilesWidget.
-                            jsonData = jQuery.parseJSON(data);
-                            if(jsonData.success) {
-                                handleFileUploadSuccess(asyncFileUploader, jsonData);
-                            } else {
-                                alert("Error: " + jsonData.error);
-                            }
-                        });
-
-                        asyncFileUploader.on('abort', function(asyncFileUploader) {
-                            alert('Upload was aborted. This example does not handle partial uploads, so you will probably have a partially uploaded file in your examples/ folder.');
-                        });
-                        asyncFileUploader.on('error', function(asyncFileUploader, e) {
-                            alert('The upload failed.');
-                            uploadProgressWidget.destroy();
-                        });
-                    }
-                }
             });
             var fileUploadWidget = new devilry_file_upload.jquery.FileUploadWidget({
                 fileUpload: fileUpload
