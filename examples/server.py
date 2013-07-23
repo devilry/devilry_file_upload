@@ -73,12 +73,12 @@ def example_file_upload_app(environ, start_response):
             files = [files]
 
         # Validate files - make sure we do not overwrite files
-        for fileitem in files:
-            if exists(join(UPLOAD_DIR, fileitem.filename)):
-                return file_upload_bad_request_response(start_response, {
-                    'success': False,
-                    'error': 'Can not overwrite ``{}``'.format(fileitem.filename)
-                })
+        #for fileitem in files:
+            #if exists(join(UPLOAD_DIR, fileitem.filename)):
+                #return file_upload_bad_request_response(start_response, {
+                    #'success': False,
+                    #'error': 'Can not overwrite ``{}``'.format(fileitem.filename)
+                #})
 
         uploaded_files = []
         for fileitem in files:

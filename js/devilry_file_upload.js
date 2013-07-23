@@ -708,7 +708,7 @@ browsers.
     DragAndDropFiles.prototype._onDrop = function(e) {
       e.preventDefault();
       if (e.dataTransfer.files.length > 0) {
-        this.fireEvent('dropfiles', e, e.dataTransfer.files);
+        this.fireEvent('dropfiles', this, e.dataTransfer.files, e);
       }
       return false;
     };

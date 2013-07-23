@@ -25,16 +25,29 @@ class UploadedFileWidget extends devilry_file_upload.Observable
     constructor: (options) ->
         super(options)
         options = devilry_file_upload.applyOptions('UploadedFileWidget', options, {
+            fileUpload: null
             deleteRequestArgs: null
             deleteButtonSelector: '.deleteButton'
             deletingMessageSelector: '.deletingMessage'
+            dragoverClass: 'dragover'
+            deleteOnReplace: false
         }, ['renderFunction'])
-        {renderFunction,
-            @deleteRequestArgs,
-            @deleteButtonSelector, @deletingMessageSelector} = options
+        {
+            @fileUpload
+            @deleteRequestArgs
+            @deleteButtonSelector
+            @deletingMessageSelector
+            @dragoverClass
+            @deleteOnReplace
+            renderFunction
+        } = options
 
         renderedHtml = renderFunction.apply(this)
         @elementJq = jQuery(renderedHtml)
+
+        if @deleteOnReplace and not @deleteRequestArgs?
+            throw "deleteOnReplace can not be ``true`` when deleteRequestArgs is not set."
+
         if @deleteRequestArgs?
             @deleteButton = @elementJq.find(@deleteButtonSelector)
             if @deleteButton.length == 0
@@ -43,10 +56,24 @@ class UploadedFileWidget extends devilry_file_upload.Observable
                 @deletingMessage = @elementJq.find(@deletingMessageSelector)
                 @deletingMessage.hide()
             @deleteButton.on('click', @_onDelete)
+        if @fileUpload and devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
+            @dragAndDrop = new devilry_file_upload.DragAndDropFiles({
+                dropTargetElement: @elementJq.get(0)
+                fileUpload: fileUpload
+                listeners: {
+                    dragenter: @_onDragEnter
+                    dragleave: @_onDragLeave
+                    dropfiles: @_onDropFiles
+                }
+            })
 
     destroy: ->
         if @deleteRequestArgs?
             @deleteButton.off('click', @_onDelete)
+
+    remove: ->
+        @destroy()
+        @elementJq.remove()
         
 
     showDeletingMessage: ->
@@ -68,10 +95,14 @@ class UploadedFileWidget extends devilry_file_upload.Observable
         else
             @deleteFile()
 
-    deleteFile: ->
+    deleteFile: (onSuccess) ->
+        console.log 'delete'
         @showDeletingMessage()
         options = jQuery.extend({}, @deleteRequestArgs, {
-            success: @_onDeleteSuccess
+            success: (data, status) =>
+                @_onDeleteSuccess(data, status)
+                if onSuccess?
+                    onSuccess(data, status)
             error: @_onDeleteError
             complete: =>
                 @hideDeletingMessage()
@@ -80,10 +111,37 @@ class UploadedFileWidget extends devilry_file_upload.Observable
 
     _onDeleteSuccess: (data, status) =>
         @fireEvent('deleteSuccess', @, data, status)
-        @elementJq.remove()
+        @remove()
 
     _onDeleteError: (jqXHR, textStatus, errorThrown) =>
         @fireEvent('deleteError', @, jqXHR, textStatus, errorThrown)
+
+    _onDragEnter: =>
+        @elementJq.addClass(@dragoverClass)
+
+    upload: (file) ->
+        @remove()
+        @fileUpload.resume()
+        @fileUpload.upload([file])
+
+    replace: (file) ->
+        if @deleteOnReplace
+            @deleteFile =>
+                @upload(file)
+        else
+            @upload(file)
+
+    _onDropFiles: (dragAndDrop, files, e) =>
+        if files.length == 1
+            abort = @fireEvent('replacefile', files[0], e)
+            if not abort
+                @replace(files[0])
+        else
+            @fireEvent('multipleFilesDropped', @, files, e)
+
+    _onDragLeave: =>
+        @elementJq.removeClass(@dragoverClass)
+        @elementJq.show()
 
 
 
@@ -135,12 +193,12 @@ class UploadedFilePreviewWidget extends UploadedFileWidget
 class FileUploadWidget
     constructor: (options) ->
         options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
-            draggingClass: 'dragover'
+            dragoverClass: 'dragover'
             supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload'
             fileUploadButtonSelector: '.fileUploadButton'
             dragAndDrop: null
         }, ['fileUpload'])
-        {@fileUpload, @dragAndDrop, @draggingClass, @supportsDragAndDropFileUploadClass,
+        {@fileUpload, @dragAndDrop, @dragoverClass, @supportsDragAndDropFileUploadClass,
             @fileUploadButtonSelector} = options
         @containerJq = jQuery(@fileUpload.getContainerElement())
         if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
@@ -170,13 +228,13 @@ class FileUploadWidget
             @_attachFileUploadListener()
 
     _onDragEnter: =>
-        @containerJq.addClass(@draggingClass)
+        @containerJq.addClass(@dragoverClass)
 
     _onDragLeave: =>
-        @containerJq.removeClass(@draggingClass)
+        @containerJq.removeClass(@dragoverClass)
 
     _onDropFiles: =>
-        @containerJq.removeClass(@draggingClass)
+        @containerJq.removeClass(@dragoverClass)
 
     _onClickFileUploadButton: (e) =>
         e.preventDefault()

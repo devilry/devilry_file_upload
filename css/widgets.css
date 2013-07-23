@@ -36,6 +36,9 @@ button.closeButtonDanger {
   border: 1px solid #d9d9d9;
   background-color: #fff;
 }
+.PictureFrame.dragover {
+  border-color: #46a546;
+}
 .FileUploadWidget {
   /* We do not show the drag and drop elements unless
      * supportsDragAndDropFileUpload is set. */
@@ -142,9 +145,6 @@ button.closeButtonDanger {
   padding: 12px;
   color: #b0b0b0;
   text-align: center;
-}
-.FileUploadWidget.PictureFrame.dragover {
-  border-color: #46a546;
 }
 .UploadedFileWidget,
 .UploadedFilePreviewWidget,

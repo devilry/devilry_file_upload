@@ -477,7 +477,7 @@ class DragAndDropFiles extends Observable
     _onDrop: (e) =>
         e.preventDefault()
         if e.dataTransfer.files.length > 0
-            @fireEvent('dropfiles', e, e.dataTransfer.files)
+            @fireEvent('dropfiles', @, e.dataTransfer.files, e)
         return false
 
 

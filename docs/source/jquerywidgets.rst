@@ -72,7 +72,7 @@ FileUploadWidget
             On old browsers, users click the file input directly to show the
             dialog. Defaults to ``.fileUpload``.
 
-        draggingClass
+        dragoverClass
             CSS class to add to the ``fileUpload.getContainerElement()`` when
             dragging files over the container. Defaults to ``dragover``.
 
@@ -160,7 +160,7 @@ You set these classes on the ``containerElement`` for the ``FileUpload``.
 
 .. warning::
 
-    The CSS will not work if you set ``draggingClass`` or
+    The CSS will not work if you set ``dragoverClass`` or
     ``supportsDragAndDropFileUpload`` to something other than their defaults.
 
 
@@ -282,7 +282,8 @@ UploadedFileWidget
 ==================
 .. class:: devilry_file_upload.jquery.UploadedFileWidget
 
-    A widget for displaying uploaded files, with an optional delete button.
+    A widget for displaying uploaded files, with an optional delete button, and
+    support for drag and drop replace.
 
     :param options: Object with the following attributes:
 
@@ -308,9 +309,74 @@ UploadedFileWidget
             created, and shown while the delete request is in progress. Ignored
             if ``deleteRequestArgs==null``. Defaults to ``.deletingMessage``.
 
+        fileUpload
+            An optional :class:`devilry_file_upload.FileUpload` object that
+            enables drag and drop replace if the browser supports it.
+
+
+
 .. attribute:: devilry_file_upload.jquery.UploadedFileWidget.elementJq
 
     The jQuery element containing the HTML rendered by ``renderFunction``.
+
+.. function:: devilry_file_upload.jquery.UploadedFileWidget.deleteFile(onSuccess)
+
+    Delete the file using ``jQuery.ajax`` and the ``deleteRequestArgs``-option.
+    We use this internally, and you may want to use it yourself if you implement custom
+    ``delete`` and ``replacefile`` event handlers that abort the default action.
+    
+    :param onSuccess:
+        A function that is called after the file has been successfully deleted.
+        It is called after all ``deleteSuccess`` event handlers. Called with the
+        same parameters as the ``deleteSuccess`` event handlers.
+
+
+Events
+------
+UploadedFileWidget is a subclass of :class:`devilry_file_upload.Observable`. The
+``uploadedFileWidget`` argument is the UploadedFileWidget-object that fired the event.
+
+``delete(uploadedFileWidget)``
+    Fired when the delete button is clicked.
+    The delete operation is aborted if any of the listeners return a
+    :class:`devilry_file_upload.ObservableResult` with ``abort=true``. Example::
+
+        function onDelete() {
+            return new devilry_file_upload.ObservableResult({
+                abort: true
+            });
+        }
+
+``deleteSuccess(uploadedFileWidget, data, status)``
+    Fired when the delete operation succeeds. The ``data`` and ``status``
+    parameters are the same as for the ``success`` callback for ``jQuery.ajax()``.
+
+``deleteSuccess(uploadedFileWidget, jqXHR, textStatus, errorThrown)``
+    Fired when the delete operation succeeds. The ``jqXHR``, ``textStatus`` and
+    ``errorThrown`` parameters are the same as for the ``error`` callback for
+    ``jQuery.ajax()``.
+
+``multipleFilesDropped(uploadedFileWidget, files, e)``
+    Fired when the user drops multiple files to replace the current file. This
+    is an error, so you should show the user an error message. ``files`` and ``e``
+    is forwarded from the :class:`devilry_file_upload.DragAndDropFiles`
+    ``dropfiles`` event.
+
+``replacefile(uploadedFileWidget, file, e)``
+    Fired when the user drops multiple files to replace the current file. This
+    is an error, so you should show the user an error message. ``file`` is the
+    File API File-object, and ``e`` is forwarded from the
+    :class:`devilry_file_upload.DragAndDropFiles` ``dropfiles`` event.
+
+    The replace file operation is aborted if any of the listeners return a
+    :class:`devilry_file_upload.ObservableResult` with ``abort=true``. Example::
+
+        function onReplaceFile(uploadedFileWidget, file, e) {
+            return new devilry_file_upload.ObservableResult({
+                abort: true
+            });
+        }
+
 
 
 Usage

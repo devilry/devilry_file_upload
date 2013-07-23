@@ -33,19 +33,28 @@ Style guide
     __extends(UploadedFileWidget, _super);
 
     function UploadedFileWidget(options) {
+      this._onDragLeave = __bind(this._onDragLeave, this);
+      this._onDropFiles = __bind(this._onDropFiles, this);
+      this._onDragEnter = __bind(this._onDragEnter, this);
       this._onDeleteError = __bind(this._onDeleteError, this);
       this._onDeleteSuccess = __bind(this._onDeleteSuccess, this);
       this._onDelete = __bind(this._onDelete, this);
       var renderFunction, renderedHtml;
       UploadedFileWidget.__super__.constructor.call(this, options);
       options = devilry_file_upload.applyOptions('UploadedFileWidget', options, {
+        fileUpload: null,
         deleteRequestArgs: null,
         deleteButtonSelector: '.deleteButton',
-        deletingMessageSelector: '.deletingMessage'
+        deletingMessageSelector: '.deletingMessage',
+        dragoverClass: 'dragover',
+        deleteOnReplace: false
       }, ['renderFunction']);
-      renderFunction = options.renderFunction, this.deleteRequestArgs = options.deleteRequestArgs, this.deleteButtonSelector = options.deleteButtonSelector, this.deletingMessageSelector = options.deletingMessageSelector;
+      this.fileUpload = options.fileUpload, this.deleteRequestArgs = options.deleteRequestArgs, this.deleteButtonSelector = options.deleteButtonSelector, this.deletingMessageSelector = options.deletingMessageSelector, this.dragoverClass = options.dragoverClass, this.deleteOnReplace = options.deleteOnReplace, renderFunction = options.renderFunction;
       renderedHtml = renderFunction.apply(this);
       this.elementJq = jQuery(renderedHtml);
+      if (this.deleteOnReplace && (this.deleteRequestArgs == null)) {
+        throw "deleteOnReplace can not be ``true`` when deleteRequestArgs is not set.";
+      }
       if (this.deleteRequestArgs != null) {
         this.deleteButton = this.elementJq.find(this.deleteButtonSelector);
         if (this.deleteButton.length === 0) {
@@ -57,12 +66,28 @@ Style guide
         }
         this.deleteButton.on('click', this._onDelete);
       }
+      if (this.fileUpload && devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
+        this.dragAndDrop = new devilry_file_upload.DragAndDropFiles({
+          dropTargetElement: this.elementJq.get(0),
+          fileUpload: fileUpload,
+          listeners: {
+            dragenter: this._onDragEnter,
+            dragleave: this._onDragLeave,
+            dropfiles: this._onDropFiles
+          }
+        });
+      }
     }
 
     UploadedFileWidget.prototype.destroy = function() {
       if (this.deleteRequestArgs != null) {
         return this.deleteButton.off('click', this._onDelete);
       }
+    };
+
+    UploadedFileWidget.prototype.remove = function() {
+      this.destroy();
+      return this.elementJq.remove();
     };
 
     UploadedFileWidget.prototype.showDeletingMessage = function() {
@@ -90,12 +115,18 @@ Style guide
       }
     };
 
-    UploadedFileWidget.prototype.deleteFile = function() {
+    UploadedFileWidget.prototype.deleteFile = function(onSuccess) {
       var options,
         _this = this;
+      console.log('delete');
       this.showDeletingMessage();
       options = jQuery.extend({}, this.deleteRequestArgs, {
-        success: this._onDeleteSuccess,
+        success: function(data, status) {
+          _this._onDeleteSuccess(data, status);
+          if (onSuccess != null) {
+            return onSuccess(data, status);
+          }
+        },
         error: this._onDeleteError,
         complete: function() {
           return _this.hideDeletingMessage();
@@ -106,11 +137,49 @@ Style guide
 
     UploadedFileWidget.prototype._onDeleteSuccess = function(data, status) {
       this.fireEvent('deleteSuccess', this, data, status);
-      return this.elementJq.remove();
+      return this.remove();
     };
 
     UploadedFileWidget.prototype._onDeleteError = function(jqXHR, textStatus, errorThrown) {
       return this.fireEvent('deleteError', this, jqXHR, textStatus, errorThrown);
+    };
+
+    UploadedFileWidget.prototype._onDragEnter = function() {
+      return this.elementJq.addClass(this.dragoverClass);
+    };
+
+    UploadedFileWidget.prototype.upload = function(file) {
+      this.remove();
+      this.fileUpload.resume();
+      return this.fileUpload.upload([file]);
+    };
+
+    UploadedFileWidget.prototype.replace = function(file) {
+      var _this = this;
+      if (this.deleteOnReplace) {
+        return this.deleteFile(function() {
+          return _this.upload(file);
+        });
+      } else {
+        return this.upload(file);
+      }
+    };
+
+    UploadedFileWidget.prototype._onDropFiles = function(dragAndDrop, files, e) {
+      var abort;
+      if (files.length === 1) {
+        abort = this.fireEvent('replacefile', files[0], e);
+        if (!abort) {
+          return this.replace(files[0]);
+        }
+      } else {
+        return this.fireEvent('multipleFilesDropped', this, files, e);
+      }
+    };
+
+    UploadedFileWidget.prototype._onDragLeave = function() {
+      this.elementJq.removeClass(this.dragoverClass);
+      return this.elementJq.show();
     };
 
     return UploadedFileWidget;
@@ -189,12 +258,12 @@ Style guide
       this._onDragLeave = __bind(this._onDragLeave, this);
       this._onDragEnter = __bind(this._onDragEnter, this);
       this._onCreateWidget = __bind(this._onCreateWidget, this);      options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
-        draggingClass: 'dragover',
+        dragoverClass: 'dragover',
         supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload',
         fileUploadButtonSelector: '.fileUploadButton',
         dragAndDrop: null
       }, ['fileUpload']);
-      this.fileUpload = options.fileUpload, this.dragAndDrop = options.dragAndDrop, this.draggingClass = options.draggingClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
+      this.fileUpload = options.fileUpload, this.dragAndDrop = options.dragAndDrop, this.dragoverClass = options.dragoverClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
       this.containerJq = jQuery(this.fileUpload.getContainerElement());
       if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
         this.dragAndDrop.on('dragenter', this._onDragEnter);
@@ -230,15 +299,15 @@ Style guide
     };
 
     FileUploadWidget.prototype._onDragEnter = function() {
-      return this.containerJq.addClass(this.draggingClass);
+      return this.containerJq.addClass(this.dragoverClass);
     };
 
     FileUploadWidget.prototype._onDragLeave = function() {
-      return this.containerJq.removeClass(this.draggingClass);
+      return this.containerJq.removeClass(this.dragoverClass);
     };
 
     FileUploadWidget.prototype._onDropFiles = function() {
-      return this.containerJq.removeClass(this.draggingClass);
+      return this.containerJq.removeClass(this.dragoverClass);
     };
 
     FileUploadWidget.prototype._onClickFileUploadButton = function(e) {
