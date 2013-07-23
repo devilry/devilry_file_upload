@@ -190,49 +190,6 @@ the event.
 class AsyncFileUploader
 =======================
 
-Events
-------
-DragAndDropFiles is a subclass of :class:`devilry_file_upload.Observable`.
-The ``asyncFileUploader`` argument of the events is the AsyncFileUploader
-instance that fired the event.
-
-
-``start(asyncFileUploader)``
-    Fired before the upload starts.
-
-    The upload is cancelled if any of the listeners return a
-    :class:`devilry_file_upload.ObservableResult` with ``abort=true``. Example::
-
-        function onStart() {
-            return new devilry_file_upload.ObservableResult({
-                abort: true
-            });
-        }
-
-``progress(asyncFileUploader, state, e)``
-    Fired for each progress. The ``state`` is a float between 0 and 100
-    indicating the progress of the upload in percent. Only fired by browsers
-    supporting XMLHttpRequest, and it is not always fired when uploading small
-    files. The ``e`` argument is the event-object from the
-    XMLHttpRequest event.
-``abort(asyncFileUploader, e)``
-    Fired when the upload is aborted. If you allow your users to abort, you
-    need to handle partial uploads on the server. Some do this simply by
-    keeping files and allowing them to be overwritten, while another solution
-    is to use an API to delete the file on abort. Only fired on browsers
-    supporting XMLHttpRequest. The ``e`` argument is the event-object from the
-    XMLHttpRequest event.
-``error(asyncFileUploader, e)``
-    Fired when the upload fails. Only fired on browsers supporting
-    XMLHttpRequest. Since the server API should be using HTTP 200 status code
-    for errors to be compatible with older browsers, this event should only be
-    triggered on connectivity errors.
-    The ``e`` argument is the event-object from the XMLHttpRequest event.
-``finished(asyncFileUploader, data)``
-    Fired when the upload is finished. The ``data`` is a string with whatever
-    your server implementation responds with. You will have to decode the data
-    yourself.
-
 .. class:: devilry_file_upload.AsyncFileUploader(options)
 
     Makes it easy to upload files with one of XMLHttpRequest or hidden Iframe.
@@ -316,6 +273,49 @@ instance that fired the event.
     empty object.
 
 
+Events
+------
+AsyncFileUploader is a subclass of :class:`devilry_file_upload.Observable`.
+The ``asyncFileUploader`` argument of the events is the AsyncFileUploader
+instance that fired the event.
+
+
+``start(asyncFileUploader)``
+    Fired before the upload starts.
+
+    The upload is cancelled if any of the listeners return a
+    :class:`devilry_file_upload.ObservableResult` with ``abort=true``. Example::
+
+        function onStart() {
+            return new devilry_file_upload.ObservableResult({
+                abort: true
+            });
+        }
+
+``progress(asyncFileUploader, state, e)``
+    Fired for each progress. The ``state`` is a float between 0 and 100
+    indicating the progress of the upload in percent. Only fired by browsers
+    supporting XMLHttpRequest, and it is not always fired when uploading small
+    files. The ``e`` argument is the event-object from the
+    XMLHttpRequest event.
+``abort(asyncFileUploader, e)``
+    Fired when the upload is aborted. If you allow your users to abort, you
+    need to handle partial uploads on the server. Some do this simply by
+    keeping files and allowing them to be overwritten, while another solution
+    is to use an API to delete the file on abort. Only fired on browsers
+    supporting XMLHttpRequest. The ``e`` argument is the event-object from the
+    XMLHttpRequest event.
+``error(asyncFileUploader, e)``
+    Fired when the upload fails. Only fired on browsers supporting
+    XMLHttpRequest. Since the server API should be using HTTP 200 status code
+    for errors to be compatible with older browsers, this event should only be
+    triggered on connectivity errors.
+    The ``e`` argument is the event-object from the XMLHttpRequest event.
+``finished(asyncFileUploader, data)``
+    Fired when the upload is finished. The ``data`` is a string with whatever
+    your server implementation responds with. You will have to decode the data
+    yourself.
+
 
 
 class DragAndDropFiles
@@ -330,6 +330,10 @@ class DragAndDropFiles
 
         dropTargetElement (*required*)
             The HTML element to attach the drag and drop events to.
+
+.. attribute:: devilry_file_upload.DragAndDropFiles.dropTargetElement
+
+    The ``dropTargetElement`` that was sent in as an option.
 
 Events
 ------

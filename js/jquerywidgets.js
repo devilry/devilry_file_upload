@@ -118,7 +118,6 @@ Style guide
     UploadedFileWidget.prototype.deleteFile = function(onSuccess) {
       var options,
         _this = this;
-      console.log('delete');
       this.showDeletingMessage();
       options = jQuery.extend({}, this.deleteRequestArgs, {
         success: function(data, status) {
@@ -256,25 +255,25 @@ Style guide
       this._onClickFileUploadButton = __bind(this._onClickFileUploadButton, this);
       this._onDropFiles = __bind(this._onDropFiles, this);
       this._onDragLeave = __bind(this._onDragLeave, this);
-      this._onDragEnter = __bind(this._onDragEnter, this);
-      this._onCreateWidget = __bind(this._onCreateWidget, this);      options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
+      this._onDragEnter = __bind(this._onDragEnter, this);      options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
         dragoverClass: 'dragover',
         supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload',
-        fileUploadButtonSelector: '.fileUploadButton',
+        fileUploadButtonJq: null,
         dragAndDrop: null
       }, ['fileUpload']);
-      this.fileUpload = options.fileUpload, this.dragAndDrop = options.dragAndDrop, this.dragoverClass = options.dragoverClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
+      this.dragoverClass = options.dragoverClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector, this.fileUploadButtonJq = options.fileUploadButtonJq, this.dragAndDrop = options.dragAndDrop, this.fileUpload = options.fileUpload;
       this.containerJq = jQuery(this.fileUpload.getContainerElement());
       if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
         this.dragAndDrop.on('dragenter', this._onDragEnter);
         this.dragAndDrop.on('dragleave', this._onDragLeave);
         this.dragAndDrop.on('dropfiles', this._onDropFiles);
         this.containerJq.addClass(this.supportsDragAndDropFileUploadClass);
-        this._attachFileUploadListener();
+        if (this.fileUploadButtonJq != null) {
+          this.fileUploadButtonJq.on('click', this._onClickFileUploadButton);
+        }
       }
       this.fileUpload.on('pause', this._onPause);
       this.fileUpload.on('resume', this._onResume);
-      this.fileUpload.on('createWidget', this._onCreateWidget);
     }
 
     FileUploadWidget.prototype.destroy = function() {
@@ -283,19 +282,8 @@ Style guide
         this.dragAndDrop.off('dragleave', this._onDragLeave);
         this.dragAndDrop.off('dropfiles', this._onDropFiles);
       }
-      this.fileUpload.off('createWidget', this._onCreateWidget);
       this.fileUpload.off('pause', this._onPause);
       return this.fileUpload.off('resume', this._onResume);
-    };
-
-    FileUploadWidget.prototype._attachFileUploadListener = function() {
-      return jQuery(this.fileUpload.getCurrentWidgetElement()).find(this.fileUploadButtonSelector).on('click', this._onClickFileUploadButton);
-    };
-
-    FileUploadWidget.prototype._onCreateWidget = function() {
-      if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
-        return this._attachFileUploadListener();
-      }
     };
 
     FileUploadWidget.prototype._onDragEnter = function() {

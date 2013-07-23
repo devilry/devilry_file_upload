@@ -445,9 +445,9 @@ class DragAndDropFiles extends Observable
         options = applyOptions('DragAndDropFiles', options, {
             dropEffect: 'copy'
         }, ['dropTargetElement'])
-        {dropTargetElement, @dropEffect} = options
+        {@dropTargetElement, @dropEffect} = options
         @draggingFiles = false
-        @dropTarget = new ElementWrapper(dropTargetElement)
+        @dropTarget = new ElementWrapper(@dropTargetElement)
         @dropTarget.on('dragover', @_onDragOver)
         @dropTarget.on('dragenter', @_onDragEnter)
         @dropTarget.on('dragleave', @_onDragLeave)

@@ -96,7 +96,6 @@ class UploadedFileWidget extends devilry_file_upload.Observable
             @deleteFile()
 
     deleteFile: (onSuccess) ->
-        console.log 'delete'
         @showDeletingMessage()
         options = jQuery.extend({}, @deleteRequestArgs, {
             success: (data, status) =>
@@ -195,37 +194,35 @@ class FileUploadWidget
         options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
             dragoverClass: 'dragover'
             supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload'
-            fileUploadButtonSelector: '.fileUploadButton'
+            fileUploadButtonJq: null
             dragAndDrop: null
         }, ['fileUpload'])
-        {@fileUpload, @dragAndDrop, @dragoverClass, @supportsDragAndDropFileUploadClass,
-            @fileUploadButtonSelector} = options
+        {
+            @dragoverClass
+            @supportsDragAndDropFileUploadClass
+            @fileUploadButtonSelector
+            @fileUploadButtonJq
+            @dragAndDrop
+            @fileUpload
+        } = options
         @containerJq = jQuery(@fileUpload.getContainerElement())
         if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
             @dragAndDrop.on('dragenter', @_onDragEnter)
             @dragAndDrop.on('dragleave', @_onDragLeave)
             @dragAndDrop.on('dropfiles', @_onDropFiles)
             @containerJq.addClass(@supportsDragAndDropFileUploadClass)
-            @_attachFileUploadListener()
+            if @fileUploadButtonJq?
+                @fileUploadButtonJq.on('click', @_onClickFileUploadButton)
         @fileUpload.on('pause', @_onPause)
         @fileUpload.on('resume', @_onResume)
-        @fileUpload.on('createWidget', @_onCreateWidget)
 
     destroy: ->
         if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
             @dragAndDrop.off('dragenter', @_onDragEnter)
             @dragAndDrop.off('dragleave', @_onDragLeave)
             @dragAndDrop.off('dropfiles', @_onDropFiles)
-        @fileUpload.off('createWidget', @_onCreateWidget)
         @fileUpload.off('pause', @_onPause)
         @fileUpload.off('resume', @_onResume)
-
-    _attachFileUploadListener: ->
-        jQuery(@fileUpload.getCurrentWidgetElement()).find(@fileUploadButtonSelector).on('click', @_onClickFileUploadButton)
-
-    _onCreateWidget: =>
-        if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
-            @_attachFileUploadListener()
 
     _onDragEnter: =>
         @containerJq.addClass(@dragoverClass)

@@ -663,15 +663,13 @@ browsers.
       this._onDrop = __bind(this._onDrop, this);
       this._onDragLeave = __bind(this._onDragLeave, this);
       this._onDragEnter = __bind(this._onDragEnter, this);
-      this._onDragOver = __bind(this._onDragOver, this);
-      var dropTargetElement;
-      DragAndDropFiles.__super__.constructor.call(this, options);
+      this._onDragOver = __bind(this._onDragOver, this);      DragAndDropFiles.__super__.constructor.call(this, options);
       options = applyOptions('DragAndDropFiles', options, {
         dropEffect: 'copy'
       }, ['dropTargetElement']);
-      dropTargetElement = options.dropTargetElement, this.dropEffect = options.dropEffect;
+      this.dropTargetElement = options.dropTargetElement, this.dropEffect = options.dropEffect;
       this.draggingFiles = false;
-      this.dropTarget = new ElementWrapper(dropTargetElement);
+      this.dropTarget = new ElementWrapper(this.dropTargetElement);
       this.dropTarget.on('dragover', this._onDragOver);
       this.dropTarget.on('dragenter', this._onDragEnter);
       this.dropTarget.on('dragleave', this._onDragLeave);

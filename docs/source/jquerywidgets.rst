@@ -62,10 +62,16 @@ FileUploadWidget
         fileUpload (required)
             A :class:`devilry_file_upload.FileUpload` object.
 
+        dragAndDrop
+            A :class:`devilry_file_upload.DragAndDropFiles` object.
+            It is required if the browser supports drag and drop.
+            Use :func:`devilry_file_upload.BrowserInfo.supportsDragAndDropFileUpload`
+            to check if the browser supports drag and drop.
+
         fileUploadButtonSelector
-            A CSS selector to find the file upload button within the current
-            widget element of the ``fileUpload`` (see
-            :class:`devilry_file_upload.FileUpload.getCurrentWidgetElement`).
+            A CSS selector to find the file upload button within the
+            ``dragAndDrop.dropTargetElement``.
+
             The file upload button is a html element (typically an ``a`` or
             ``button``) that the user can click to show the regular file upload
             dialog. This is only used when the browser support drag and drop.
