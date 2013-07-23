@@ -103,7 +103,7 @@ html_theme_options = {
     #'bootswatch_theme': "united",
     #'bootswatch_theme': "amelia",
     'bootswatch_theme': "journal",
-    'navbar_fixed_top': 'true',
+    'navbar_fixed_top': 'false',
     'source_link_position': None
 }
 
