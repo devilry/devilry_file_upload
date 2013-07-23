@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Simple</title>
+        <title>Simple single file at a time upload</title>
     </head>
 
     <body>
-        <form id="myform" action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="files">
-        </form>
+        <p>A very simple file uploader.</p>
+        <div id="fileUpload"></div>
+        <pre id="logger"></pre>
 
         <script src="../js/devilry_file_upload.js"></script>
         <script>
-            new devilry_file_upload.FileUpload({
-                formElement: document.getElementById('myform'),
+            var uploader = new devilry_file_upload.FileUpload({
+                containerElement: document.getElementById('fileUpload'),
+                widgetRenderFunction: function() {
+                    return [
+                        '<form action="/upload" method="post" enctype="multipart/form-data">',
+                            '<input type="file" name="files">',
+                        '</form>'
+                    ].join('');
+                },
                 listeners: {
-                    change: function() {
-                        console.log('fieldChange');
-                    },
-                    uploadStart: function(fileUpload) {
-                        console.log('uploadStart', fileUpload);
-                    },
-                    uploadProgress: function(fileUpload, state) {
-                        console.log('progress', fileUpload, state);
-                    },
-                    uploadFinished: function(fileUpload, data) {
-                        //console.log('uploadFinished', fileUpload, data);
-                        console.log('uploadFinished', data);
+                    uploadStart: function(fileUpload, asyncFileUploader) {
+                        asyncFileUploader.on('finished', function(asyncFileUploader, data) {
+                            var logger = document.getElementById('logger');
+                            logger.innerHTML = logger.innerHTML + data + '\n\n';
+                        });
                     }
                 }
             });

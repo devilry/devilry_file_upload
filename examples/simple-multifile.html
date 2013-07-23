@@ -5,17 +5,27 @@
     </head>
 
     <body>
-        <form id="myform" action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="files" multiple>
-        </form>
+        <p>Simple upload with the ability to upload multiple files in one go on modern browsers.</p>
+        <div id="fileUpload"></div>
+        <pre id="logger"></pre>
 
         <script src="../js/devilry_file_upload.js"></script>
         <script>
             var uploader = new devilry_file_upload.FileUpload({
-                formElement: document.getElementById('myform'),
+                containerElement: document.getElementById('fileUpload'),
+                widgetRenderFunction: function() {
+                    return [
+                        '<form action="/upload" method="post" enctype="multipart/form-data">',
+                            '<input type="file" name="files" multiple>',
+                        '</form>'
+                    ].join('');
+                },
                 listeners: {
-                    uploadFinished: function(fileUpload, data) {
-                        console.log('uploadFinished', data);
+                    uploadStart: function(fileUpload, asyncFileUploader) {
+                        asyncFileUploader.on('finished', function(asyncFileUploader, data) {
+                            var logger = document.getElementById('logger');
+                            logger.innerHTML = logger.innerHTML + data + '\n\n';
+                        });
                     }
                 }
             });
