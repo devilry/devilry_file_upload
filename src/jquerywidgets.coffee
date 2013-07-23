@@ -138,14 +138,15 @@ class FileUploadWidget
             draggingClass: 'dragover'
             supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload'
             fileUploadButtonSelector: '.fileUploadButton'
+            dragAndDrop: null
         }, ['fileUpload'])
-        {@fileUpload, @draggingClass, @supportsDragAndDropFileUploadClass,
+        {@fileUpload, @dragAndDrop, @draggingClass, @supportsDragAndDropFileUploadClass,
             @fileUploadButtonSelector} = options
         @containerJq = jQuery(@fileUpload.getContainerElement())
         if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
-            @fileUpload.on('dragenter', @_onDragEnter)
-            @fileUpload.on('dragleave', @_onDragLeave)
-            @fileUpload.on('dropFiles', @_onDropFiles)
+            @dragAndDrop.on('dragenter', @_onDragEnter)
+            @dragAndDrop.on('dragleave', @_onDragLeave)
+            @dragAndDrop.on('dropfiles', @_onDropFiles)
             @containerJq.addClass(@supportsDragAndDropFileUploadClass)
             @_attachFileUploadListener()
         @fileUpload.on('pause', @_onPause)
@@ -154,9 +155,9 @@ class FileUploadWidget
 
     destroy: ->
         if devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()
-            @fileUpload.off('dragenter', @_onDragEnter)
-            @fileUpload.off('dragleave', @_onDragLeave)
-            @fileUpload.off('dropFiles', @_onDropFiles)
+            @dragAndDrop.off('dragenter', @_onDragEnter)
+            @dragAndDrop.off('dragleave', @_onDragLeave)
+            @dragAndDrop.off('dropfiles', @_onDropFiles)
         @fileUpload.off('createWidget', @_onCreateWidget)
         @fileUpload.off('pause', @_onPause)
         @fileUpload.off('resume', @_onResume)

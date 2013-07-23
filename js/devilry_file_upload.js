@@ -7,7 +7,7 @@ browsers.
 
 
 (function() {
-  var ArrayUtils, AsyncFileUploader, BrowserInfo, ElementWrapper, FileUpload, FileWrapper, HiddenIframe, Observable, ObservableResult, applyOptions, browserInfo, dataTransferContainsFiles, defer, prevent_default_window_drophandler,
+  var ArrayUtils, AsyncFileUploader, BrowserInfo, DragAndDropFiles, ElementWrapper, FileUpload, FileWrapper, HiddenIframe, Observable, ObservableResult, applyOptions, browserInfo, dataTransferContainsFiles, defer, prevent_default_window_drophandler,
     __slice = [].slice,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -553,22 +553,15 @@ browsers.
     __extends(FileUpload, _super);
 
     function FileUpload(options) {
-      this._onDrop = __bind(this._onDrop, this);
-      this._onDragLeave = __bind(this._onDragLeave, this);
-      this._onDragEnter = __bind(this._onDragEnter, this);
-      this._onDragOver = __bind(this._onDragOver, this);
       this._onUploadStart = __bind(this._onUploadStart, this);
       this._onChange = __bind(this._onChange, this);
       var containerElement;
       FileUpload.__super__.constructor.call(this, options);
       options = applyOptions('FileUpload', options, {
-        uploadOnChange: true,
-        dropTargetSelector: null,
-        dropEffect: 'copy'
+        uploadOnChange: true
       }, ['containerElement', 'widgetRenderFunction']);
-      containerElement = options.containerElement, this.widgetRenderFunction = options.widgetRenderFunction, this.uploadOnChange = options.uploadOnChange, this.dropTargetSelector = options.dropTargetSelector, this.dropEffect = options.dropEffect;
+      containerElement = options.containerElement, this.widgetRenderFunction = options.widgetRenderFunction, this.uploadOnChange = options.uploadOnChange;
       this.container = new ElementWrapper(containerElement);
-      this.draggingFiles = false;
       this._createWidget();
     }
 
@@ -579,13 +572,6 @@ browsers.
       this.current.setInnerHtml(renderedHtml);
       this.container.appendChild(this.current);
       this._getCurrentFileField().on('change', this._onChange);
-      if ((this.dropTargetSelector != null) && browserInfo.supportsDragAndDropFileUpload()) {
-        this.dropTargetElement = this.current.down(this.dropTargetSelector);
-        if (this.dropTargetElement === null) {
-          throw "No drop target element found for selector: " + this.dropTargetSelector;
-        }
-        this._setupDragEvents();
-      }
       return this.fireEvent('createWidget', this);
     };
 
@@ -665,14 +651,34 @@ browsers.
       }
     };
 
-    FileUpload.prototype._setupDragEvents = function() {
-      this.dropTargetElement.on('dragover', this._onDragOver);
-      this.dropTargetElement.on('dragenter', this._onDragEnter);
-      this.dropTargetElement.on('dragleave', this._onDragLeave);
-      return this.dropTargetElement.on('drop', this._onDrop);
-    };
+    return FileUpload;
 
-    FileUpload.prototype._onDragOver = function(e) {
+  })(Observable);
+
+  DragAndDropFiles = (function(_super) {
+
+    __extends(DragAndDropFiles, _super);
+
+    function DragAndDropFiles(options) {
+      this._onDrop = __bind(this._onDrop, this);
+      this._onDragLeave = __bind(this._onDragLeave, this);
+      this._onDragEnter = __bind(this._onDragEnter, this);
+      this._onDragOver = __bind(this._onDragOver, this);
+      var dropTargetElement;
+      DragAndDropFiles.__super__.constructor.call(this, options);
+      options = applyOptions('DragAndDropFiles', options, {
+        dropEffect: 'copy'
+      }, ['dropTargetElement']);
+      dropTargetElement = options.dropTargetElement, this.dropEffect = options.dropEffect;
+      this.draggingFiles = false;
+      this.dropTarget = new ElementWrapper(dropTargetElement);
+      this.dropTarget.on('dragover', this._onDragOver);
+      this.dropTarget.on('dragenter', this._onDragEnter);
+      this.dropTarget.on('dragleave', this._onDragLeave);
+      this.dropTarget.on('drop', this._onDrop);
+    }
+
+    DragAndDropFiles.prototype._onDragOver = function(e) {
       e.preventDefault();
       if (this.draggingFiles) {
         e.dataTransfer.dropEffect = this.dropEffect;
@@ -681,7 +687,7 @@ browsers.
       return false;
     };
 
-    FileUpload.prototype._onDragEnter = function(e) {
+    DragAndDropFiles.prototype._onDragEnter = function(e) {
       e.preventDefault();
       this.draggingFiles = dataTransferContainsFiles(e.dataTransfer);
       if (this.draggingFiles) {
@@ -690,7 +696,7 @@ browsers.
       return false;
     };
 
-    FileUpload.prototype._onDragLeave = function(e) {
+    DragAndDropFiles.prototype._onDragLeave = function(e) {
       e.preventDefault();
       if (this.draggingFiles) {
         this.draggingFiles = false;
@@ -699,18 +705,15 @@ browsers.
       return false;
     };
 
-    FileUpload.prototype._onDrop = function(e) {
+    DragAndDropFiles.prototype._onDrop = function(e) {
       e.preventDefault();
       if (e.dataTransfer.files.length > 0) {
-        this.fireEvent('dropFiles', e, e.dataTransfer.files);
-        if (this.uploadOnChange) {
-          this.upload(e.dataTransfer.files);
-        }
+        this.fireEvent('dropfiles', e, e.dataTransfer.files);
       }
       return false;
     };
 
-    return FileUpload;
+    return DragAndDropFiles;
 
   })(Observable);
 
@@ -727,6 +730,7 @@ browsers.
 
   window.devilry_file_upload = {
     FileUpload: FileUpload,
+    DragAndDropFiles: DragAndDropFiles,
     AsyncFileUploader: AsyncFileUploader,
     browserInfo: browserInfo,
     FileWrapper: FileWrapper,

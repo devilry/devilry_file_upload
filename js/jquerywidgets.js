@@ -191,14 +191,15 @@ Style guide
       this._onCreateWidget = __bind(this._onCreateWidget, this);      options = devilry_file_upload.applyOptions('FileUploadWidget', options, {
         draggingClass: 'dragover',
         supportsDragAndDropFileUploadClass: 'supportsDragAndDropFileUpload',
-        fileUploadButtonSelector: '.fileUploadButton'
+        fileUploadButtonSelector: '.fileUploadButton',
+        dragAndDrop: null
       }, ['fileUpload']);
-      this.fileUpload = options.fileUpload, this.draggingClass = options.draggingClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
+      this.fileUpload = options.fileUpload, this.dragAndDrop = options.dragAndDrop, this.draggingClass = options.draggingClass, this.supportsDragAndDropFileUploadClass = options.supportsDragAndDropFileUploadClass, this.fileUploadButtonSelector = options.fileUploadButtonSelector;
       this.containerJq = jQuery(this.fileUpload.getContainerElement());
       if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
-        this.fileUpload.on('dragenter', this._onDragEnter);
-        this.fileUpload.on('dragleave', this._onDragLeave);
-        this.fileUpload.on('dropFiles', this._onDropFiles);
+        this.dragAndDrop.on('dragenter', this._onDragEnter);
+        this.dragAndDrop.on('dragleave', this._onDragLeave);
+        this.dragAndDrop.on('dropfiles', this._onDropFiles);
         this.containerJq.addClass(this.supportsDragAndDropFileUploadClass);
         this._attachFileUploadListener();
       }
@@ -209,9 +210,9 @@ Style guide
 
     FileUploadWidget.prototype.destroy = function() {
       if (devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
-        this.fileUpload.off('dragenter', this._onDragEnter);
-        this.fileUpload.off('dragleave', this._onDragLeave);
-        this.fileUpload.off('dropFiles', this._onDropFiles);
+        this.dragAndDrop.off('dragenter', this._onDragEnter);
+        this.dragAndDrop.off('dragleave', this._onDragLeave);
+        this.dragAndDrop.off('dropfiles', this._onDropFiles);
       }
       this.fileUpload.off('createWidget', this._onCreateWidget);
       this.fileUpload.off('pause', this._onPause);

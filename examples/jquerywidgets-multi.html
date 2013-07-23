@@ -19,7 +19,14 @@
         <div class="content">
             <div id="uploadedFiles"></div>
             <div id="fileUploadProgressContainer"></div>
-            <div id="fileUpload" class="FileUploadWidget FileUploadWidgetSlimLineExpand"></div>
+            <div id="fileUpload" class="FileUploadWidget FileUploadWidgetSlimLineExpand">
+                <div class="dragHelp">
+                    Add files by dragging and dropping them into this box, or 
+                    by <a href="#" class="fileUploadButton">uploading them</a>.
+                </div>
+                <div class="dropHelp">Drop your files to upload them.</div>
+                <div class="dropTarget"></div>
+            </div>
         </div>
 
         <script src="../js/devilry_file_upload.js"></script>
@@ -127,7 +134,6 @@
                     uploadProgressWidget.destroy();
                 });
             }
-            
 
 
             ///////////////////////////////////////////////////
@@ -147,26 +153,33 @@
                     uploadStart: handleUploadStart
                 },
 
-                // Enable drag and dropping files into one of the elements in the widget
-                dropTargetSelector: '.dropTarget',
-
                 // Render the widget
                 widgetRenderFunction: function() {
                     return [
                         '<form action="/upload" method="post" enctype="multipart/form-data">',
                             '<input type="file" name="files" multiple>',
-                        '</form>',
-                        '<div class="dragHelp">',
-                            'Add files by dragging and dropping them into this box, or ',
-                            'by <a href="#" class="fileUploadButton">uploading them</a>.',
-                        '</div>',
-                        '<div class="dropHelp">Drop your files to upload them.</div>',
-                        '<div class="dropTarget"></div>'
+                        '</form>'
                     ].join('');
                 },
             });
+
+            // Setup drag and drop
+            var dragAndDrop = null;
+            if(devilry_file_upload.browserInfo.supportsDragAndDropFileUpload()) {
+                dragAndDrop = new devilry_file_upload.DragAndDropFiles({
+                    dropTargetElement: $('#fileUpload .dropTarget').get(0), // Must the a HTML element, not a jQuery object
+                    listeners: {
+                        dropfiles: function(dragAndDrop, files) {
+                            fileUpload.upload(files);
+                        }
+                    }
+                });
+            }
+
+            // Setup the file upload widget
             var fileUploadWidget = new devilry_file_upload.jquery.FileUploadWidget({
-                fileUpload: fileUpload
+                fileUpload: fileUpload,
+                dragAndDrop: dragAndDrop
             });
         </script>
     </body>
