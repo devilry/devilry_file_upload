@@ -16,7 +16,7 @@ Sourcecode, bugs, and suggestions
 The code is at our `GitHub project page
 <https://github.com/devilry/devilry_file_upload>`_. Submit issues through the
 github project page. Submit patches using github pull requests. You may want to
-create an issue before creating a patch to minimize the risk of you patch being
+create an issue before creating a patch to minimize the risk of your patch being
 rejected.
 
 
