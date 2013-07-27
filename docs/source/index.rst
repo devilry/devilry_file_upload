@@ -35,6 +35,15 @@ TOC
    license
 
 
+Install
+=======
+Checkout our `git repo from GitHub
+<https://github.com/devilry/devilry_file_upload>`_, or use `Bower
+<https://github.com/bower/bower>`_::
+
+    $ bower install devilry_file_upload
+
+
 How it looks
 ============
 The :doc:`jquerywidgets` API provides a set of widgets that you can use. They

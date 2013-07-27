@@ -2,6 +2,8 @@
 devilry_file_upload
 ===================
 
+**`Read the docs <https://devilry_file_upload.readthedocs.org/en/latest/>`_**
+
 
 License (Two-clause BSD license)
 ================================
@@ -12,9 +14,3 @@ State
 =====
 The project is in beta. We are currently trying it out on a complex
 audio/video/text sharing site.
-
-
-Docs
-====
-
-See https://devilry_file_upload.readthedocs.org/en/latest/.
