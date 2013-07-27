@@ -1,6 +1,6 @@
 {
   "name": "devilry_file_upload",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "js/devilry_file_upload.js",
   "ignore": [
     "docs/*",

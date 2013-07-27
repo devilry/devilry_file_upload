@@ -1,10 +1,33 @@
-.dragHelp,.dropHelp,.dropTarget{display:none}
-form.supportsDragAndDropFileUpload{padding:30px;text-align:center;height:150px;color:#ccc;font-weight:bold;font-size:22px;line-height:28px;position:relative;border:4px dashed #ccc}
-form.supportsDragAndDropFileUpload input{display:none;}
-form.supportsDragAndDropFileUpload .dragHelp{display:block;position:relative;z-index:1}
-form.supportsDragAndDropFileUpload .dropTarget{display:block;position:absolute;left:0;top:0;width:100%;height:100%}
-form.supportsDragAndDropFileUpload.dragover{height:300px;border-color:#46a546}
-form.supportsDragAndDropFileUpload.dragover .dragHelp{display:none}
-form.supportsDragAndDropFileUpload.dragover .dropHelp{display:block;font-size:28px;line-height:34px}
-.UploadedFileWidget{margin-top:7px;margin-bottom:7px}
-.UploadedFileWidget .filename{font-size:16px;font-weight:bold;color:#666}
+.closeButtonDanger{float:right;border:false;font-size:20px;cursor:pointer;line-height:16px;color:rgba(0,0,0,0.6);font-weight:bold;text-shadow:0 1px 0 #fff}.closeButtonDanger:hover{color:rgba(162,27,27,0.8)}
+button.closeButtonDanger{background:transparent;padding:0;border:0;-webkit-appearance:none}
+.inlineProgress{display:inline-block;height:16px;width:80px;border:1px solid #d9d9d9;background-color:#fff;vertical-align:middle}.inlineProgress .bar{background-color:#46a546;height:100%;width:0}
+.PictureFrame{width:200px;height:250px;border:1px solid #d9d9d9;background-color:#fff}.PictureFrame.dragover{border-color:#46a546}
+.FileUploadWidget{}.FileUploadWidget .dragHelp,.FileUploadWidget .dropHelp,.FileUploadWidget .dropTarget{display:none}
+.FileUploadWidget form{margin:0;padding:0}
+.FileUploadWidget.supportsDragAndDropFileUpload{position:relative;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.FileUploadWidget.supportsDragAndDropFileUpload form{display:none}
+.FileUploadWidget.supportsDragAndDropFileUpload .dragHelp{display:block;position:relative;z-index:3}
+.FileUploadWidget.supportsDragAndDropFileUpload .dropTarget{display:block;position:absolute;z-index:2;left:0;top:0;width:100%;height:100%}
+.FileUploadWidget.supportsDragAndDropFileUpload .dropHelp{position:relative;z-index:1}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover .dragHelp{display:none}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover .dropHelp{display:block}
+.FileUploadWidget.supportsDragAndDropFileUpload.dragover .dropTarget{background-color:#fff;opacity:0.01}
+.FileUploadWidget.FileUploadWidgetLargeStriped{padding:30px;text-align:center;height:150px;color:#ccc;font-weight:bold;font-size:22px;line-height:28px;border:4px dashed #ccc}.FileUploadWidget.FileUploadWidgetLargeStriped.dragover{height:300px;border-color:#46a546}.FileUploadWidget.FileUploadWidgetLargeStriped.dragover .dropHelp{font-size:28px;line-height:34px}
+.FileUploadWidget.FileUploadWidgetSlimLine{padding:6px 4px;text-align:center;color:#b0b0b0;font-size:14px;line-height:16px;border:1px solid #ccc}.FileUploadWidget.FileUploadWidgetSlimLine.dragover{border-color:#46a546}
+.FileUploadWidget.FileUploadWidgetSlimLineExpand{padding:6px 4px;text-align:center;color:#b0b0b0;font-size:14px;line-height:16px;border:1px solid #ccc}.FileUploadWidget.FileUploadWidgetSlimLineExpand.dragover{padding:18px 12px;border-color:#46a546;border-width:3px;font-size:18px;line-height:20px}
+.FileUploadWidget.PictureFrame{padding:12px;color:#b0b0b0;text-align:center}
+.UploadedFileWidget,.UploadedFilePreviewWidget,.FileUploadProgressWidget{position:relative}.UploadedFileWidget .closeButtonDanger,.UploadedFilePreviewWidget .closeButtonDanger,.FileUploadProgressWidget .closeButtonDanger{position:absolute;top:4px;right:7px}
+.UploadedFileWidget.GrayRow,.UploadedFilePreviewWidget.GrayRow,.FileUploadProgressWidget.GrayRow{margin:7px 0;border:1px solid #d9d9d9;background-color:#efefef;padding:4px 30px 4px 7px}
+.FileUploadProgressWidget.PictureFrame{padding:10px 30px 10px 10px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:#888}.FileUploadProgressWidget.PictureFrame .inlineProgress{display:block;position:absolute;left:0;bottom:0;width:100%;border:none;border-top:1px solid #d9d9d9;height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.UploadedFileWidget.GrayRow .filename,.UploadedFilePreviewWidget.GrayRow .filename{font-weight:bold;color:#333}
+.UploadedFileWidget.GrayRow .deletingMessage,.UploadedFilePreviewWidget.GrayRow .deletingMessage{background-color:#c43900;color:#fff;font-weight:bold;padding:2px 4px;position:absolute;top:0;right:0}
+.UploadedFileWidget.GrayRow.large .filename,.UploadedFilePreviewWidget.GrayRow.large .filename{font-size:18px;line-height:20px}
+.UploadedFileWidget.PictureFrame .filename,.UploadedFilePreviewWidget.PictureFrame .filename,.UploadedFileWidget.PictureFrame .deletingMessage,.UploadedFilePreviewWidget.PictureFrame .deletingMessage{display:block;position:absolute;left:0;width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:6px 12px}
+.UploadedFileWidget.PictureFrame .filename,.UploadedFilePreviewWidget.PictureFrame .filename{bottom:0;overflow:hidden;background-color:rgba(255,255,255,0.9);border-top:1px solid #d9d9d9;white-space:nowrap;text-overflow:ellipsis;text-align:center;color:#888;font-weight:bold}
+.UploadedFileWidget.PictureFrame .deletingMessage,.UploadedFilePreviewWidget.PictureFrame .deletingMessage{background-color:#c43900;color:#fff;font-weight:bold;top:0}
+.UploadedFilePreviewWidget .preview{display:none}
+.UploadedFilePreviewWidget.hasPreview{position:relative}.UploadedFilePreviewWidget.hasPreview .preview{display:block;background-size:contain;background-repeat:no-repeat;background-position:center}
+.UploadedFilePreviewWidget.hasPreview.GrayRow .filename{line-height:40px;padding-left:50px}
+.UploadedFilePreviewWidget.hasPreview.GrayRow .preview{width:40px;font-size:10px;line-height:11px;font-style:italic;color:#666;padding:3px;position:absolute;left:0;top:0;height:100%;overflow:hidden;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.UploadedFilePreviewWidget.hasPreview.GrayRow.large .filename{line-height:100px;padding-left:115px}
+.UploadedFilePreviewWidget.hasPreview.GrayRow.large .preview{width:100px;font-size:12px;line-height:14px;font-style:italic}
+.UploadedFilePreviewWidget.hasPreview.PictureFrame .preview{position:absolute;left:0;top:0;width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-size:10px;line-height:11px;font-style:italic;color:#666;padding:3px 30px 3px 3px;height:100%;overflow:hidden}
