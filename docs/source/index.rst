@@ -1,14 +1,25 @@
 Overview
 ========
 
-``devilry_file_upload`` makes it easy to use file upload in web applications
-without forcing you to use a specific library or a specific UI design. We provide
-an API, :doc:`devilry_file_upload`, that abstracts away the differences
-between modern and old browsers.
+``devilry_file_upload`` makes it easy to use file upload in web applications.
 
-Instead of limiting the capabilities to the lowest common denominator, we make
-it work on old browsers, while enabling you to create beautiful and powerful
-widgets for modern browsers.
+We provide an API, :doc:`devilry_file_upload`, that abstracts away the differences
+between modern and old browsers, examples, and a small UI library for jQuery
+that serves as examples and a usable set of UI components to get you
+started.
+
+Important properties
+====================
+
+- The core (:doc:`devilry_file_upload`) has no dependencies.
+- Instead of limiting the capabilities to the lowest common denominator, we make
+  it work on old browsers, while enabling you to create beautiful and powerful
+  widgets for modern browsers.
+- Deterministic behavior and as little magical behavior as possible.
+- The API is not designed to be a copy paste file uploader, it is designed to
+  make it easy for you to make your own. You may think of the core as a backwards
+  compatible version of the File-API in modern browsers, with some extra useful
+  utilities mixed in.
 
 
 Sourcecode, bugs, and suggestions
