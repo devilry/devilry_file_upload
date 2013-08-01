@@ -76,6 +76,17 @@ styled the form at all, but you can of course do so if you like:
 .. image:: images/jquerymultifileold.png
 
 
+Another example is the jQuery widget for single file upload with a picture
+frame style. As indicated by the screenshot below, users can replace images using
+drag and drop.
+
+.. image:: images/jquerysinglefile.png
+
+Note that these are just examples. You can easily make a picture frame styled
+multiple file uploader for something like a photo archive by adding your own
+styles to the ones provided by us, or by using only your own CSS.
+
+
 Supported browsers
 ==================
 Tested in IE8, IE9, IE10, Firefox 3.6+, Chrome, Safari and Opera. We do not use
