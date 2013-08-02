@@ -3,7 +3,7 @@ Overview
 
 ``devilry_file_upload`` makes it easy to use file upload in web applications.
 
-We provide an API, :doc:`devilry_file_upload`, that abstracts away the differences
+We provide an API (:doc:`devilry_file_upload`) that abstracts away the differences
 between modern and old browsers, examples, and a small UI library for jQuery
 that serves as examples and a usable set of UI components to get you
 started.
