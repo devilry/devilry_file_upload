@@ -20,3 +20,10 @@ When the user drops a file, we use
 attach an event listener to the FileUpload object that triggers when a file
 upload succeeds, that is also triggered when we manually upload a file using
 the upload-function.
+
+
+.. literalinclude:: /../../examples/multifile-draganddrop.html
+    :language: html
+
+
+.. note:: See :doc:`/examples` for information about running the example.
