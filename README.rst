@@ -2,7 +2,7 @@
 devilry_file_upload
 ===================
 
-`Read the docs <http://http://devilry-file-upload.readthedocs.org/en/latest/>`_
+`Read the docs <http://devilry-file-upload.readthedocs.org/en/latest/>`_
 
 
 License (Two-clause BSD license)
